@@ -1,5 +1,6 @@
 import { A } from "@solidjs/router";
 import Counter from "~/components/Counter";
+import Avatar from "~/components/Avatar";
 
 export default function About() {
   return (
