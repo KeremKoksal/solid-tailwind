@@ -1,6 +1,7 @@
 import { A } from "@solidjs/router";
 import Counter from "~/components/Counter";
 import Avatar from "~/components/Avatar";
+import SelectMenus from "~/components/SelectMenus";
 
 export default function Home() {
 
@@ -25,6 +26,7 @@ export default function Home() {
           </p>
            <Avatar isStudent={studentStatusesForAvatars}>
            </Avatar>
+           <SelectMenus/>
         </main>
       );
 }
