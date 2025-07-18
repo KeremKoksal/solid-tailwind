@@ -1,16 +1,6 @@
 import { createSignal } from "solid-js";
 
-const people = [
- { name: "Wade Cooper", username: "wadecooper" },
- { name: "Arlene Mccoy", username: "arlenemccoy" },
- { name: "Devon Webb", username: "devonwebb" },
- { name: "Tom Cook", username: "tomcook" },
- { name: "Tanya Fox", username: "tanyafox" },
- { name: "Hellen Schmidt", username: "hellenschmidt" },
- { name: "Caroline Scott", username: "carolinescott" },
-];
-
-export default function SelectMenus() {
+export default function SelectMenus(props: { people: { name: string; username: string }[] }) {
  const [selected, setSelected] = createSignal<string | null>(null);
 
  return (
@@ -29,7 +19,7 @@ export default function SelectMenus() {
        <option value="" disabled selected>
         Choose...
        </option>
-       {people.map((person) => (
+       {props.people.map((person) => (
            <option value={person.username}>
             {person.name} @{person.username}
            </option>

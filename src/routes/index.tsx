@@ -2,10 +2,16 @@ import { A } from "@solidjs/router";
 import Counter from "~/components/Counter";
 import Avatar from "~/components/Avatar";
 import SelectMenus from "~/components/SelectMenus";
+import { createSignal, onMount } from "solid-js";
 
 export default function Home() {
-
-    const studentStatusesForAvatars = [false, true, false, true, true, true];
+    const [people, setPeople] = createSignal<{ name: string; username: string }[]>([]);
+    onMount(async () => {
+        const res = await fetch("public/people.json");
+        const data = await res.json();
+        setPeople(data);
+    });
+    const studentStatusesForAvatars = [true];
     return (
        <main class="text-center mx-auto text-gray-700 p-4">
           <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Hello world!</h1>
@@ -26,7 +32,7 @@ export default function Home() {
           </p>
            <Avatar isStudent={studentStatusesForAvatars}>
            </Avatar>
-           <SelectMenus/>
+           <SelectMenus people={people()}/>
         </main>
       );
 }
