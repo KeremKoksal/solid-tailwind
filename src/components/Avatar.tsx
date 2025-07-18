@@ -2,21 +2,20 @@ import { For } from "solid-js";
 import studentAvatar from "../../public/avatar.png";
 import defaultAvatar from "../../public/avatar1.png";
 
-export default function Avatar(props: { isStudent: boolean[] }) {
-    const avatarSizes = ["w-6", "w-8", "w-10", "w-12", "w-14", "w-16"];
-
-    return (
-        <div class="flex gap-2 justify-center items-center py-10">
-            <For each={avatarSizes}>
-                {(size, index) => {
-                    const currentIsStudent = props.isStudent[index()];
-                    const displayedAvatar = currentIsStudent ? studentAvatar : defaultAvatar;
-                    return (
-                        <img
-                            src={displayedAvatar}
-                            class={`rounded-full ${size} aspect-square`}
-                            alt="avatar"
-                        />
+export default function Avatar(props:{isStudent: boolean[]}){
+    return(
+        <div class="fixed top-2 right-6 w-10 h-10">
+            <For each={props.isStudent}>
+                {(isStudent) =>{
+                    const displayedAvatar=isStudent ? studentAvatar : defaultAvatar;
+                    return(
+                        <div class="w-full h-full rounded-full overflow-hidden">
+                            <img
+                                src={displayedAvatar}
+                                class="w-full h-full object-cover"
+                                alt="avatar"
+                            />
+                        </div>
                     );
                 }}
             </For>
