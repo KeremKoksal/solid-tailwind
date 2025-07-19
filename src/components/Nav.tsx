@@ -19,6 +19,9 @@ export default function Nav() {
         <li class={`border-b-2 ${active("/inputs")} mx-1.5 sm:mx-6`}>
           <a href="/inputs">Inputs</a>
         </li>
+        <li class={`border-b-2 ${active("/buttons")} mx-1.5 sm:mx-6`}>
+          <a href="/buttons">Buttons</a>
+        </li>
       </ul>
     </nav>
   );
