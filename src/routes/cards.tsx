@@ -4,7 +4,7 @@ import Card from "~/components/Card";
 export default function Components() {
   return (
     <div class="container mx-auto p-4 space-y-6">
-      <title>Components - Card Examples</title>
+      <title>Components - Cards</title>
       <h1 class="text-2xl font-bold mb-6">Card Component Examples</h1>
 
       <Card
