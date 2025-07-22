@@ -1,24 +1,23 @@
-import { For } from "solid-js";
-import studentAvatar from "../../public/avatar.png";
+import placeholderStudent from "../../public/avatar.png";
 import defaultAvatar from "../../public/avatar1.png";
 
-export default function Avatar(props:{isStudent: boolean[]}){
-    return(
-        <div class="fixed top-2 right-6 w-10 h-10">
-            <For each={props.isStudent}>
-                {(isStudent) =>{
-                    const displayedAvatar=isStudent ? studentAvatar : defaultAvatar;
-                    return(
-                        <div class="w-full h-full rounded-full overflow-hidden">
-                            <img
-                                src={displayedAvatar}
-                                class="w-full h-full object-cover"
-                                alt="avatar"
-                            />
-                        </div>
-                    );
-                }}
-            </For>
+interface AvatarProps {
+    isStudent: boolean;
+    picture?: string | null;
+}
+
+export default function Avatar(props: AvatarProps) {
+    const displayedAvatar = props.isStudent
+        ? props.picture || placeholderStudent
+        : defaultAvatar;
+
+    return (
+        <div class="fixed top-2 right-6 w-10 h-10 rounded-full overflow-hidden shadow-md">
+            <img
+                src={displayedAvatar}
+                class="w-full h-full object-cover"
+                alt="avatar"
+            />
         </div>
     );
 }

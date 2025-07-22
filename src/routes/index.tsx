@@ -2,16 +2,18 @@ import { A } from "@solidjs/router";
 import Counter from "~/components/Counter";
 import Avatar from "~/components/Avatar";
 import SelectMenus from "~/components/SelectMenus";
-import { createSignal, onMount } from "solid-js";
+import {createSignal, onMount, Show} from "solid-js";
+
 
 export default function Home() {
-    const [people, setPeople] = createSignal<{ name: string; username: string }[]>([]);
+    const [people, setPeople] = createSignal<any[]>([]);
+
     onMount(async () => {
         const res = await fetch("public/people.json");
         const data = await res.json();
         setPeople(data);
     });
-    const studentStatusesForAvatars = [true];
+    const currentUser = () => people()[0];
     return (
         <main class="text-center mx-auto text-gray-700 p-4">
             <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Hello world!</h1>
@@ -24,15 +26,18 @@ export default function Home() {
                 to learn how to build Solid apps.
             </p>
             <p class="my-4">
-                <span>Home</span>
-                {" - "}
+                <span>Home</span> -{" "}
                 <A href="/about" class="text-sky-600 hover:underline">
                     About Page
-                </A>{" "}
+                </A>
             </p>
-            <Avatar isStudent={studentStatusesForAvatars}>
-            </Avatar>
-            <SelectMenus people={people()}/>
+            <Show when={currentUser()}>
+                <Avatar
+                    isStudent={currentUser()?.isStudent}
+                    picture={currentUser()?.picture}
+                />
+            </Show>
+            <SelectMenus people={people()} />
         </main>
     );
 }
