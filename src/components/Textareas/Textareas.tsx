@@ -1,4 +1,4 @@
-// src/components/Textareas/Textareas.tsx
+
 import { Component, createSignal, For, Show } from 'solid-js';
 import { FaSolidUser, FaSolidTag, FaSolidCalendar, FaSolidPaperclip } from 'solid-icons/fa';
 
@@ -34,7 +34,7 @@ const Textareas: Component<TextareasProps> = (props) => {
     const [hata, setHata] = createSignal('');
     const [basariMesaji, setBasariMesaji] = createSignal('');
 
-    // Yurt arızaları için özel seçenekler
+
     const getActions = (): Action[] => [
         {
             type: 'atama',
@@ -119,17 +119,17 @@ const Textareas: Component<TextareasProps> = (props) => {
             dosya: dosya() || undefined
         };
 
-        // onSubmit prop'u varsa çağır, yoksa console'da göster
+
         if (props.onSubmit && typeof props.onSubmit === 'function') {
             props.onSubmit(formData);
         } else {
             console.log('Form Data:', formData);
         }
 
-        // Başarı mesajı göster
+
         setBasariMesaji('Arıza raporu başarıyla gönderildi!');
 
-        // Formu temizle
+
         setBaslik('');
         setAciklama('');
         setAtanan(undefined);
@@ -137,7 +137,7 @@ const Textareas: Component<TextareasProps> = (props) => {
         setSonTarih(undefined);
         setDosya(null);
 
-        // Başarı mesajını 3 saniye sonra gizle
+
         setTimeout(() => {
             setBasariMesaji('');
         }, 3000);
@@ -150,7 +150,7 @@ const Textareas: Component<TextareasProps> = (props) => {
 
     return (
         <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg border border-gray-200 overflow-visible relative">
-            {/* Başlık ve Yazı Alanı */}
+
             <div class="p-4 space-y-4">
                 <input
                     type="text"
@@ -169,21 +169,21 @@ const Textareas: Component<TextareasProps> = (props) => {
                 />
             </div>
 
-            {/* Hata Mesajı */}
+
             <Show when={hata()}>
                 <div class="px-4 py-2 bg-red-100 text-red-700 text-sm">
                     {hata()}
                 </div>
             </Show>
 
-            {/* Başarı Mesajı */}
+
             <Show when={basariMesaji()}>
                 <div class="px-4 py-2 bg-green-100 text-green-700 text-sm">
                     {basariMesaji()}
                 </div>
             </Show>
 
-            {/* Özellikler */}
+
             <div class="flex flex-wrap justify-between items-center p-3 bg-gray-50 border-t gap-2 relative">
                 <div class="flex flex-wrap gap-2">
                     <For each={getActions()}>
@@ -266,7 +266,7 @@ const Textareas: Component<TextareasProps> = (props) => {
                 </button>
             </div>
 
-            {/* Document click handler */}
+
             <Show when={activeDropdown()}>
                 <div
                     class="fixed inset-0 z-40"

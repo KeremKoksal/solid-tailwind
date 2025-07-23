@@ -1,4 +1,3 @@
-// src/components/Badge/Badge.tsx
 
 import { createSignal, For } from 'solid-js';
 

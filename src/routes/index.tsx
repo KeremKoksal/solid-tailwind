@@ -17,7 +17,7 @@ const fetchUsers = async () => {
 export default function Home() {
     const [users] = createResource(fetchUsers);
 
-    const [filterGender, setFilterGender] = createSignal(""); // 🔥 ÖNEMLİ: SSR ile uyum için boş string
+    const [filterGender, setFilterGender] = createSignal("");
     const [sortField, setSortField] = createSignal<"name" | "age">("name");
     const [isModalOpen, setModalOpen] = createSignal(false);
     const [modalMode, setModalMode] = createSignal<"create" | "update">("create");
@@ -101,7 +101,7 @@ export default function Home() {
             </div>
 
             <Heading title="Kullanıcılar" description="Filtrele, sırala veya kullanıcı ekle">
-                {/* 🔒 SSR uyumlu SELECT (Hem value hem onInput olmalı) */}
+               
                 <select
                     value={filterGender()}
                     onInput={(e) => setFilterGender(e.currentTarget.value)}

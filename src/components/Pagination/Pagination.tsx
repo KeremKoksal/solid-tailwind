@@ -85,7 +85,6 @@ const Pagination = (props: PaginationProps) => {
 
     return (
         <div class={containerClass}>
-            {/* Mobil görünüm */}
             <div class="flex justify-between sm:hidden">
                 <button
                     onClick={() => onPageChange(currentPage - 1)}
@@ -108,7 +107,6 @@ const Pagination = (props: PaginationProps) => {
                 </button>
             </div>
 
-            {/* Masaüstü görünüm */}
             <div class="hidden sm:flex sm:items-center sm:justify-between w-full">
                 <Show when={showResultsInfo}>
                     <div class="text-sm text-gray-600 dark:text-gray-300">
