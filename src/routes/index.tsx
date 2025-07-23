@@ -13,8 +13,46 @@ const fetchUsers = async () => {
     const data = await res.json();
     return data.results;
 };
+import Avatar from "~/components/Avatar";
+import SelectMenus from "~/components/SelectMenus";
+import {createSignal, onMount, Show} from "solid-js";
+
 
 export default function Home() {
+    const [people, setPeople] = createSignal<any[]>([]);
+
+    onMount(async () => {
+        const res = await fetch("public/people.json");
+        const data = await res.json();
+        setPeople(data);
+    });
+    const currentUser = () => people()[0];
+    return (
+        <main class="text-center mx-auto text-gray-700 p-4">
+            <h1 class="max-6-xs text-6xl text-sky-700 font-thin uppercase my-16">Hello world!</h1>
+            <Counter />
+            <p class="mt-8">
+                Visit{" "}
+                <a href="https://solidjs.com" target="_blank" class="text-sky-600 hover:underline">
+                    solidjs.com
+                </a>{" "}
+                to learn how to build Solid apps.
+            </p>
+            <p class="my-4">
+                <span>Home</span> -{" "}
+                <A href="/about" class="text-sky-600 hover:underline">
+                    About Page
+                </A>
+            </p>
+            <Show when={currentUser()}>
+                <Avatar
+                    isStudent={currentUser()?.isStudent}
+                    picture={currentUser()?.picture}
+                />
+            </Show>
+            <SelectMenus people={people()} />
+        </main>
+    );
     const [users] = createResource(fetchUsers);
 
     const [filterGender, setFilterGender] = createSignal("");
@@ -101,7 +139,7 @@ export default function Home() {
             </div>
 
             <Heading title="Kullanıcılar" description="Filtrele, sırala veya kullanıcı ekle">
-               
+
                 <select
                     value={filterGender()}
                     onInput={(e) => setFilterGender(e.currentTarget.value)}
