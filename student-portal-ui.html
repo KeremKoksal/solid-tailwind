@@ -1,1462 +1,173 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODTÜ Öğrenci Yurt Portalı</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f6fa;
-            color: #2c3e50;
-        }
-
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo h1 {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .notifications {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background-color: #ef4444;
-            color: white;
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-
-        .user-profile:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #10b981;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .action-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .action-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #10b981);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .action-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .action-card:hover::before {
-            transform: translateX(0);
-        }
-
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-        }
-
-        .action-icon.blue {
-            background-color: #dbeafe;
-            color: #3b82f6;
-        }
-
-        .action-icon.green {
-            background-color: #d1fae5;
-            color: #10b981;
-        }
-
-        .action-icon.purple {
-            background-color: #e9d5ff;
-            color: #9333ea;
-        }
-
-        .action-icon.orange {
-            background-color: #fed7aa;
-            color: #ea580c;
-        }
-
-        .action-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #1f2937;
-        }
-
-        .action-description {
-            font-size: 0.875rem;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-        /* Main Content */
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Info Cards */
-        .info-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .card-action {
-            font-size: 0.875rem;
-            color: #3b82f6;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        .card-action:hover {
-            color: #2563eb;
-        }
-
-        /* Room Info */
-        .room-info {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .room-detail {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .room-label {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-
-        .room-value {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        /* Roommates */
-        .roommates-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .roommate-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background-color: #f9fafb;
-            border-radius: 8px;
-        }
-
-        .roommate-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            color: #6b7280;
-        }
-
-        .roommate-info {
-            flex: 1;
-        }
-
-        .roommate-name {
-            font-weight: 500;
-            color: #1f2937;
-        }
-
-        .roommate-dept {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
-
-        /* Payment Status */
-        .payment-status {
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .payment-status.paid {
-            background-color: #d1fae5;
-            border: 1px solid #86efac;
-        }
-
-        .payment-status.pending {
-            background-color: #fef3c7;
-            border: 1px solid #fde68a;
-        }
-
-        .payment-status.overdue {
-            background-color: #fee2e2;
-            border: 1px solid #fca5a5;
-        }
-
-        .payment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .payment-label {
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .payment-amount {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .payment-status.paid .payment-amount {
-            color: #10b981;
-        }
-
-        .payment-status.pending .payment-amount {
-            color: #f59e0b;
-        }
-
-        .payment-status.overdue .payment-amount {
-            color: #ef4444;
-        }
-
-        .payment-due {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
-
-        /* Announcements */
-        .announcement-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .announcement-item {
-            padding: 16px;
-            background-color: #f9fafb;
-            border-radius: 8px;
-            border-left: 4px solid #3b82f6;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .announcement-item:hover {
-            background-color: #f3f4f6;
-        }
-
-        .announcement-date {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-bottom: 4px;
-        }
-
-        .announcement-title {
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .announcement-preview {
-            font-size: 0.875rem;
-            color: #6b7280;
-            line-height: 1.4;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Calendar Widget */
-        .calendar-widget {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .calendar-month {
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .calendar-nav {
-            display: flex;
-            gap: 8px;
-        }
-
-        .calendar-nav button {
-            background: none;
-            border: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            transition: all 0.2s;
-        }
-
-        .calendar-nav button:hover {
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
-        }
-
-        .calendar-day-header {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #6b7280;
-            padding: 8px 0;
-        }
-
-        .calendar-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .calendar-day:hover {
-            background-color: #f3f4f6;
-        }
-
-        .calendar-day.today {
-            background-color: #dbeafe;
-            color: #3b82f6;
-            font-weight: 600;
-        }
-
-        .calendar-day.event {
-            position: relative;
-        }
-
-        .calendar-day.event::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            width: 4px;
-            height: 4px;
-            background-color: #ef4444;
-            border-radius: 50%;
-        }
-
-        /* Quick Links */
-        .quick-links {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .links-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .link-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #374151;
-            transition: all 0.2s;
-        }
-
-        .link-item:hover {
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .link-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background: white;
-            max-width: 600px;
-            margin: 0 auto;
-            border-radius: 12px;
-            padding: 30px;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #6b7280;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 20px;
-        }
-
-        /* Forms in Modal */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-        }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        /* Buttons */
-        .button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .button-primary {
-            background-color: #3b82f6;
-            color: white;
-        }
-
-        .button-primary:hover {
-            background-color: #2563eb;
-        }
-
-        .button-secondary {
-            background-color: #e5e7eb;
-            color: #374151;
-        }
-
-        .button-secondary:hover {
-            background-color: #d1d5db;
-        }
-
-        .button-success {
-            background-color: #10b981;
-            color: white;
-        }
-
-        .button-success:hover {
-            background-color: #059669;
-        }
-
-        /* Permission Status */
-        .permission-status {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px;
-            background-color: #f0fdf4;
-            border: 1px solid #86efac;
-            border-radius: 8px;
-            margin-bottom: 16px;
-        }
-
-        .permission-icon {
-            width: 24px;
-            height: 24px;
-            color: #10b981;
-        }
-
-        .permission-text {
-            flex: 1;
-        }
-
-        .permission-title {
-            font-weight: 600;
-            color: #065f46;
-            margin-bottom: 2px;
-        }
-
-        .permission-details {
-            font-size: 0.875rem;
-            color: #047857;
-        }
-
-        /* Complaint Status */
-        .complaint-item {
-            padding: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            margin-bottom: 12px;
-        }
-
-        .complaint-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 8px;
-        }
-
-        .complaint-title {
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .status-badge.pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-badge.in-progress {
-            background-color: #dbeafe;
-            color: #1e3a8a;
-        }
-
-        .status-badge.resolved {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        .complaint-description {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 8px;
-        }
-
-        .complaint-date {
-            font-size: 0.75rem;
-            color: #9ca3af;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .user-menu {
-                display: none;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .room-info {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-content {
-                margin: 20px 0;
-            }
-        }
-
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-radius: 50%;
-            border-top-color: #3b82f6;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
-        }
-
-        .empty-icon {
-            width: 64px;
-            height: 64px;
-            margin: 0 auto 16px;
-            color: #d1d5db;
-        }
-
-        .empty-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .empty-description {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="logo">
-                <h1>ODTÜ Yurt Portalı</h1>
-            </div>
-            
-            <button class="mobile-menu-toggle">☰</button>
-            
-            <div class="user-menu">
-                <div class="notifications">
-                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                    </svg>
-                    <span class="notification-badge">3</span>
-                </div>
-                
-                <div class="user-profile">
-                    <div class="user-avatar">AY</div>
-                    <div>
-                        <div style="font-weight: 500;">Ahmet Yılmaz</div>
-                        <div style="font-size: 0.75rem; opacity: 0.8;">2021405123</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <div class="action-card" onclick="openModal('permissionModal')">
-                <div class="action-icon blue">📋</div>
-                <h3 class="action-title">İzin Başvurusu</h3>
-                <p class="action-description">Hafta sonu veya tatil izni için başvuru yap</p>
-            </div>
-            
-            <div class="action-card" onclick="openModal('visitorModal')">
-                <div class="action-icon green">👥</div>
-                <h3 class="action-title">Ziyaretçi Kaydı</h3>
-                <p class="action-description">Misafir kaydı oluştur</p>
-            </div>
-            
-            <div class="action-card" onclick="openModal('complaintModal')">
-                <div class="action-icon purple">🔧</div>
-                <h3 class="action-title">Arıza/Şikayet</h3>
-                <p class="action-description">Oda veya yurt ile ilgili sorun bildir</p>
-            </div>
-            
-            <div class="action-card" onclick="window.location.href='#payment'">
-                <div class="action-icon orange">💳</div>
-                <h3 class="action-title">Ödeme Yap</h3>
-                <p class="action-description">Yurt ücretini öde veya kontrol et</p>
-            </div>
-        </div>
-
-        <!-- Dashboard Grid -->
-        <div class="dashboard-grid">
-            <!-- Main Content -->
-            <div class="main-content">
-                <!-- Room Information -->
-                <div class="info-card">
-                    <div class="card-header">
-                        <h2 class="card-title">Oda Bilgileri</h2>
-                        <a href="#" class="card-action">Oda Değişikliği Talep Et</a>
-                    </div>
-                    
-                    <div class="room-info">
-                        <div class="room-detail">
-                            <span class="room-label">Yurt</span>
-                            <span class="room-value">Erkek Yurdu A</span>
-                        </div>
-                        <div class="room-detail">
-                            <span class="room-label">Oda No</span>
-                            <span class="room-value">A-204</span>
-                        </div>
-                        <div class="room-detail">
-                            <span class="room-label">Kat</span>
-                            <span class="room-value">2. Kat</span>
-                        </div>
-                        <div class="room-detail">
-                            <span class="room-label">Yatak No</span>
-                            <span class="room-value">3</span>
-                        </div>
-                    </div>
-                    
-                    <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #374151;">Oda Arkadaşları</h3>
-                    <div class="roommates-list">
-                        <div class="roommate-item">
-                            <div class="roommate-avatar">MK</div>
-                            <div class="roommate-info">
-                                <div class="roommate-name">Mehmet Kaya</div>
-                                <div class="roommate-dept">Bilgisayar Mühendisliği</div>
-                            </div>
-                        </div>
-                        <div class="roommate-item">
-                            <div class="roommate-avatar">EC</div>
-                            <div class="roommate-info">
-                                <div class="roommate-name">Emre Can</div>
-                                <div class="roommate-dept">Elektrik-Elektronik Müh.</div>
-                            </div>
-                        </div>
-                        <div class="roommate-item">
-                            <div class="roommate-avatar">BD</div>
-                            <div class="roommate-info">
-                                <div class="roommate-name">Burak Demir</div>
-                                <div class="roommate-dept">Makine Mühendisliği</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Payment Status -->
-                <div class="info-card">
-                    <div class="card-header">
-                        <h2 class="card-title">Ödeme Durumu</h2>
-                        <a href="#" class="card-action">Tüm Ödemeler</a>
-                    </div>
-                    
-                    <div class="payment-status pending">
-                        <div class="payment-header">
-                            <span class="payment-label">Haziran 2025</span>
-                            <span class="payment-amount">₺1,250</span>
-                        </div>
-                        <div class="payment-due">Son ödeme: 10 Haziran 2025</div>
-                    </div>
-                    
-                    <div class="payment-status paid">
-                        <div class="payment-header">
-                            <span class="payment-label">Mayıs 2025</span>
-                            <span class="payment-amount">Ödendi</span>
-                        </div>
-                        <div class="payment-due">Ödeme tarihi: 05 Mayıs 2025</div>
-                    </div>
-                    
-                    <button class="button button-primary" style="width: 100%; margin-top: 16px;">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                        Ödeme Yap
-                    </button>
-                </div>
-
-                <!-- Recent Announcements -->
-                <div class="info-card">
-                    <div class="card-header">
-                        <h2 class="card-title">Duyurular</h2>
-                        <a href="#" class="card-action">Tümünü Gör</a>
-                    </div>
-                    
-                    <div class="announcement-list">
-                        <div class="announcement-item">
-                            <div class="announcement-date">03 Haziran 2025</div>
-                            <div class="announcement-title">Yaz Dönemi Yurt Başvuruları</div>
-                            <div class="announcement-preview">2025 Yaz dönemi yurt başvuruları 15 Haziran'da başlayacaktır...</div>
-                        </div>
-                        
-                        <div class="announcement-item">
-                            <div class="announcement-date">01 Haziran 2025</div>
-                            <div class="announcement-title">Çamaşırhane Bakımı</div>
-                            <div class="announcement-preview">5 Haziran Çarşamba günü çamaşırhane bakım nedeniyle kapalı olacaktır...</div>
-                        </div>
-                        
-                        <div class="announcement-item">
-                            <div class="announcement-date">28 Mayıs 2025</div>
-                            <div class="announcement-title">Yangın Tatbikatı</div>
-                            <div class="announcement-preview">30 Mayıs saat 14:00'te yangın tatbikatı yapılacaktır. Tüm öğrencilerin katılımı zorunludur...</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Permissions -->
-                <div class="info-card">
-                    <div class="card-header">
-                        <h2 class="card-title">İzin Durumu</h2>
-                        <a href="#" class="card-action">İzin Geçmişi</a>
-                    </div>
-                    
-                    <div class="permission-status">
-                        <svg class="permission-icon" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                        <div class="permission-text">
-                            <div class="permission-title">Aktif İzin</div>
-                            <div class="permission-details">7-9 Haziran 2025 (Hafta sonu izni)</div>
-                        </div>
-                        <button class="button button-secondary" style="font-size: 0.75rem; padding: 6px 12px;">İptal Et</button>
-                    </div>
-                    
-                    <button class="button button-primary" style="width: 100%;" onclick="openModal('permissionModal')">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Yeni İzin Başvurusu
-                    </button>
-                </div>
-
-                <!-- Recent Complaints -->
-                <div class="info-card">
-                    <div class="card-header">
-                        <h2 class="card-title">Arıza/Şikayet Takibi</h2>
-                        <a href="#" class="card-action">Tüm Kayıtlar</a>
-                    </div>
-                    
-                    <div class="complaint-item">
-                        <div class="complaint-header">
-                            <div class="complaint-title">Klima Arızası</div>
-                            <span class="status-badge in-progress">İşlemde</span>
-                        </div>
-                        <div class="complaint-description">Oda kliması çalışmıyor, sıcak hava üflüyor.</div>
-                        <div class="complaint-date">2 gün önce</div>
-                    </div>
-                    
-                    <div class="complaint-item">
-                        <div class="complaint-header">
-                            <div class="complaint-title">Duş Başlığı Sorunu</div>
-                            <span class="status-badge resolved">Çözüldü</span>
-                        </div>
-                        <div class="complaint-description">Duş başlığından su sızıntısı var.</div>
-                        <div class="complaint-date">1 hafta önce</div>
-                    </div>
-                    
-                    <button class="button button-primary" style="width: 100%;" onclick="openModal('complaintModal')">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                        Yeni Arıza/Şikayet Bildirimi
-                    </button>
-                </div>
-            </div>
-
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <!-- Calendar Widget -->
-                <div class="calendar-widget">
-                    <div class="calendar-header">
-                        <h3 class="calendar-month">Haziran 2025</h3>
-                        <div class="calendar-nav">
-                            <button>‹</button>
-                            <button>›</button>
-                        </div>
-                    </div>
-                    
-                    <div class="calendar-grid">
-                        <div class="calendar-day-header">Pt</div>
-                        <div class="calendar-day-header">Sa</div>
-                        <div class="calendar-day-header">Ça</div>
-                        <div class="calendar-day-header">Pe</div>
-                        <div class="calendar-day-header">Cu</div>
-                        <div class="calendar-day-header">Ct</div>
-                        <div class="calendar-day-header">Pz</div>
-                        
-                        <div class="calendar-day"></div>
-                        <div class="calendar-day"></div>
-                        <div class="calendar-day"></div>
-                        <div class="calendar-day"></div>
-                        <div class="calendar-day"></div>
-                        <div class="calendar-day">1</div>
-                        <div class="calendar-day">2</div>
-                        <div class="calendar-day today">3</div>
-                        <div class="calendar-day">4</div>
-                        <div class="calendar-day event">5</div>
-                        <div class="calendar-day">6</div>
-                        <div class="calendar-day">7</div>
-                        <div class="calendar-day">8</div>
-                        <div class="calendar-day">9</div>
-                        <div class="calendar-day event">10</div>
-                        <div class="calendar-day">11</div>
-                        <div class="calendar-day">12</div>
-                        <div class="calendar-day">13</div>
-                        <div class="calendar-day">14</div>
-                        <div class="calendar-day event">15</div>
-                        <div class="calendar-day">16</div>
-                        <div class="calendar-day">17</div>
-                        <div class="calendar-day">18</div>
-                        <div class="calendar-day">19</div>
-                        <div class="calendar-day">20</div>
-                        <div class="calendar-day">21</div>
-                        <div class="calendar-day">22</div>
-                        <div class="calendar-day">23</div>
-                        <div class="calendar-day">24</div>
-                        <div class="calendar-day">25</div>
-                        <div class="calendar-day">26</div>
-                        <div class="calendar-day">27</div>
-                        <div class="calendar-day">28</div>
-                        <div class="calendar-day">29</div>
-                        <div class="calendar-day">30</div>
-                    </div>
-                    
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;">
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                            <div style="width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;"></div>
-                            <span style="font-size: 0.875rem; color: #6b7280;">5 Haz - Çamaşırhane Bakımı</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                            <div style="width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;"></div>
-                            <span style="font-size: 0.875rem; color: #6b7280;">10 Haz - Ödeme Son Günü</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div style="width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;"></div>
-                            <span style="font-size: 0.875rem; color: #6b7280;">15 Haz - Yaz Başvuruları</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Links -->
-                <div class="quick-links">
-                    <div class="card-header">
-                        <h3 class="card-title">Hızlı Erişim</h3>
-                    </div>
-                    
-                    <div class="links-list">
-                        <a href="#" class="link-item">
-                            <span class="link-icon">📅</span>
-                            <span>Çamaşırhane Randevusu</span>
-                        </a>
-                        <a href="#" class="link-item">
-                            <span class="link-icon">📋</span>
-                            <span>Yurt Kuralları</span>
-                        </a>
-                        <a href="#" class="link-item">
-                            <span class="link-icon">📞</span>
-                            <span>İletişim Numaraları</span>
-                        </a>
-                        <a href="#" class="link-item">
-                            <span class="link-icon">🍽️</span>
-                            <span>Yemekhane Menüsü</span>
-                        </a>
-                        <a href="#" class="link-item">
-                            <span class="link-icon">📚</span>
-                            <span>Kütüphane Saatleri</span>
-                        </a>
-                        <a href="#" class="link-item">
-                            <span class="link-icon">🚌</span>
-                            <span>Servis Saatleri</span>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Contact Info -->
-                <div class="info-card">
-                    <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: #374151;">Acil Durumlar</h3>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                            <span style="font-size: 0.875rem; color: #6b7280;">Yurt Müdürü</span>
-                            <a href="tel:+903122101234" style="font-weight: 500; color: #3b82f6; text-decoration: none;">0312 210 12 34</a>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                            <span style="font-size: 0.875rem; color: #6b7280;">Güvenlik</span>
-                            <a href="tel:+903122101111" style="font-weight: 500; color: #3b82f6; text-decoration: none;">0312 210 11 11</a>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
-                            <span style="font-size: 0.875rem; color: #6b7280;">Sağlık Merkezi</span>
-                            <a href="tel:+903122104747" style="font-weight: 500; color: #3b82f6; text-decoration: none;">0312 210 47 47</a>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-        </div>
-    </div>
-
-    <!-- Permission Modal -->
-    <div id="permissionModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('permissionModal')">×</button>
-            <h2 class="modal-title">İzin Başvurusu</h2>
-            
-            <form id="permissionForm">
-                <div class="form-group">
-                    <label class="form-label">İzin Türü</label>
-                    <select class="form-select" required>
-                        <option value="">Seçiniz</option>
-                        <option value="weekend">Hafta Sonu İzni</option>
-                        <option value="holiday">Tatil İzni</option>
-                        <option value="emergency">Acil İzin</option>
-                        <option value="medical">Sağlık İzni</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Başlangıç Tarihi</label>
-                    <input type="date" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Bitiş Tarihi</label>
-                    <input type="date" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Gideceğiniz Adres</label>
-                    <input type="text" class="form-input" placeholder="İl/İlçe" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">İletişim Numarası</label>
-                    <input type="tel" class="form-input" placeholder="05XX XXX XX XX" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Açıklama</label>
-                    <textarea class="form-textarea" placeholder="İzin sebebinizi kısaca açıklayınız"></textarea>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="button button-primary">Başvuruyu Gönder</button>
-                    <button type="button" class="button button-secondary" onclick="closeModal('permissionModal')">İptal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Visitor Modal -->
-    <div id="visitorModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('visitorModal')">×</button>
-            <h2 class="modal-title">Ziyaretçi Kaydı</h2>
-            
-            <form id="visitorForm">
-                <div class="form-group">
-                    <label class="form-label">Ziyaretçi Adı Soyadı</label>
-                    <input type="text" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">TC Kimlik No</label>
-                    <input type="text" class="form-input" maxlength="11" pattern="[0-9]{11}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Yakınlık Derecesi</label>
-                    <select class="form-select" required>
-                        <option value="">Seçiniz</option>
-                        <option value="parent">Anne/Baba</option>
-                        <option value="sibling">Kardeş</option>
-                        <option value="relative">Akraba</option>
-                        <option value="friend">Arkadaş</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Ziyaret Tarihi</label>
-                    <input type="date" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tahmini Giriş Saati</label>
-                    <input type="time" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">İletişim Numarası</label>
-                    <input type="tel" class="form-input" placeholder="05XX XXX XX XX" required>
-                </div>
-                
-                <div style="background-color: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-                    <p style="font-size: 0.875rem; color: #92400e;">
-                        <strong>Önemli:</strong> Ziyaretçiler en geç 23:30'da yurttan ayrılmalıdır. Ziyaretçi kabul saatleri: 09:00 - 23:00
-                    </p>
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button type="submit" class="button button-primary">Kayıt Oluştur</button>
-                    <button type="button" class="button button-secondary" onclick="closeModal('visitorModal')">İptal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Complaint Modal -->
-    <div id="complaintModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('complaintModal')">×</button>
-            <h2 class="modal-title">Arıza/Şikayet Bildirimi</h2>
-            
-            <form id="complaintForm">
-                <div class="form-group">
-                    <label class="form-label">Kategori</label>
-                    <select class="form-select" required>
-                        <option value="">Seçiniz</option>
-                        <option value="electrical">Elektrik</option>
-                        <option value="plumbing">Tesisat</option>
-                        <option value="furniture">Mobilya</option>
-                        <option value="cleaning">Temizlik</option>
-                        <option value="security">Güvenlik</option>
-                        <option value="other">Diğer</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Konum</label>
-                    <select class="form-select" required>
-                        <option value="">Seçiniz</option>
-                        <option value="room">Oda</option>
-                        <option value="bathroom">Banyo/WC</option>
-                        <option value="corridor">Koridor</option>
-                        <option value="laundry">Çamaşırhane</option>
-                        <option value="kitchen">Mutfak</option>
-                        <option value="other">Diğer</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Başlık</label>
-                    <input type="text" class="form-input" placeholder="Sorunun kısa açıklaması" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Detaylı Açıklama</label>
-                    <textarea class="form-textarea" rows="4" placeholder="Sorunu detaylı olarak açıklayınız" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Öncelik</label>
-                    <select class="form-select" required>
-                        <option value="low">Düşük</option>
-                        <option value="medium" selected>Orta</option>
-                        <option value="high">Yüksek</option>
-                        <option value="urgent">Acil</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Fotoğraf Ekle (Opsiyonel)</label>
-                    <input type="file" class="form-input" accept="image/*" multiple>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="button button-primary">Bildirimi Gönder</button>
-                    <button type="button" class="button button-secondary" onclick="closeModal('complaintModal')">İptal</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-        // Modal Functions
-        function openModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-        }
-
-        // Form Submissions
-        document.getElementById('permissionForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('İzin başvurunuz alındı. Yurt müdürlüğü tarafından değerlendirilecektir.');
-            closeModal('permissionModal');
-            this.reset();
-        });
-
-        document.getElementById('visitorForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Ziyaretçi kaydınız oluşturuldu. Ziyaretçiniz giriş yaparken bu kaydı göstermelidir.');
-            closeModal('visitorModal');
-            this.reset();
-        });
-
-        document.getElementById('complaintForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Arıza/Şikayet bildiriminiz alındı. En kısa sürede ilgilenilecektir.');
-            closeModal('complaintModal');
-            this.reset();
-        });
-
-        // Notification Click
-        document.querySelector('.notifications').addEventListener('click', function() {
-            alert('Bildirimler:\n\n1. Yurt ücretinizin son ödeme tarihi yaklaşıyor\n2. Çamaşırhane randevunuz yarın 14:00\'te\n3. Yeni bir duyuru yayınlandı');
-        });
-
-        // Calendar Navigation
-        const months = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-        let currentMonth = 5; // June (0-indexed)
-        let currentYear = 2025;
-
-        document.querySelectorAll('.calendar-nav button').forEach((button, index) => {
-            button.addEventListener('click', function() {
-                if (index === 0) { // Previous
-                    currentMonth--;
-                    if (currentMonth < 0) {
-                        currentMonth = 11;
-                        currentYear--;
-                    }
-                } else { // Next
-                    currentMonth++;
-                    if (currentMonth > 11) {
-                        currentMonth = 0;
-                        currentYear++;
-                    }
-                }
-                document.querySelector('.calendar-month').textContent = `${months[currentMonth]} ${currentYear}`;
-            });
-        });
-
-        // Announcement Click
-        document.querySelectorAll('.announcement-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const title = this.querySelector('.announcement-title').textContent;
-                const preview = this.querySelector('.announcement-preview').textContent;
-                alert(`${title}\n\n${preview}\n\nDuyurunun tamamını okumak için tıklayın.`);
-            });
-        });
-
-        // Quick Links
-        document.querySelectorAll('.link-item').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const linkText = this.textContent.trim();
-                alert(`${linkText} sayfasına yönlendiriliyorsunuz...`);
-            });
-        });
-
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
-            alert('Mobil menü açılıyor...');
-        });
-    </script>
-</body>
-</html>
+import { createSignal, createMemo, For, Show } from "solid-js";
+import Heading from "~/components/Headings";
+import Tables from "~/components/Tables";
+import Pagination from "~/components/Pagination";
+import Combobox from "~/components/Combobox";
+import Modal from "~/components/Modal";
+
+interface User {
+name: string;
+username: string;
+email: string;
+picture: string;
+active: boolean;
+}
+
+export default function UserManagement() {
+const [users, setUsers] = createSignal<User[]>([
+{
+name: "Ayşe Çakıl",
+username: "aysecakil",
+email: "ayse@example.com",
+picture: "https://randomuser.me/api/portraits/women/1.jpg",
+active: true,
+},
+{
+name: "Mehmet Yılmaz",
+username: "mehmety",
+email: "mehmet@example.com",
+picture: "https://randomuser.me/api/portraits/men/2.jpg",
+active: false,
+},
+]);
+
+const [selectedUsername, setSelectedUsername] = createSignal("");
+const [isModalOpen, setModalOpen] = createSignal(false);
+const [modalMode, setModalMode] = createSignal<"create" | "update">("create");
+const [editingUser, setEditingUser] = createSignal<User | null>(null);
+    const [currentPage, setCurrentPage] = createSignal(1);
+    const resultsPerPage = 2;
+
+    const filteredUsers = createMemo(() => {
+    const all = users();
+    if (!selectedUsername()) return all;
+    return all.filter((u) => u.username === selectedUsername());
+    });
+
+    const paginatedUsers = createMemo(() => {
+    const start = (currentPage() - 1) * resultsPerPage;
+    return filteredUsers().slice(start, start + resultsPerPage);
+    });
+
+    const totalPages = createMemo(() =>
+    Math.ceil(filteredUsers().length / resultsPerPage)
+    );
+
+    const handleEdit = (user: User) => {
+    setEditingUser(user);
+    setModalMode("update");
+    setModalOpen(true);
+    };
+
+    const handleCreate = () => {
+    setEditingUser(null);
+    setModalMode("create");
+    setModalOpen(true);
+    };
+
+    const handleSave = (e: Event) => {
+    e.preventDefault();
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const newUser: User = {
+    name: formData.get("name") as string,
+    username: formData.get("username") as string,
+    email: formData.get("email") as string,
+    picture:
+    editingUser()?.picture ||
+    "https://randomuser.me/api/portraits/lego/1.jpg",
+    active: formData.get("active") === "on",
+    };
+
+    if (modalMode() === "create") {
+    setUsers([...users(), newUser]);
+    } else {
+    setUsers(
+    users().map((u) =>
+    u.username === editingUser()?.username ? newUser : u
+    )
+    );
+    }
+
+    setModalOpen(false);
+    };
+
+    return (
+    <main class="p-6">
+        <Heading
+                title="Kullanıcı Yönetimi"
+                description="Kullanıcı adına göre filtreleyin, yeni kullanıcı ekleyin ya da güncelleyin."
+        >
+            <Combobox
+                    name="user-filter"
+                    placeholder="Kullanıcı seçin"
+                    options={[{ value: "", label: "Tümü" }, ...users().map((u) => ({
+            value: u.username,
+            label: u.username,
+            }))]}
+            value={selectedUsername()}
+            onChange={(val) => setSelectedUsername(val)}
+            />
+
+            <button
+                    class="bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700"
+                    onClick={handleCreate}
+            >
+                Yeni Kullanıcı
+            </button>
+        </Heading>
+
+        <Tables users={paginatedUsers()} onEdit={(user) => handleEdit(user)} />
+
+        <Pagination
+                currentPage={currentPage()}
+                totalPages={totalPages()}
+                totalResults={filteredUsers().length}
+                onPageChange={setCurrentPage}
+                resultsPerPage={resultsPerPage}
+        />
+
+        <Modal
+                open={isModalOpen()}
+                onClose={() => setModalOpen(false)}
+        title={modalMode() === "create" ? "Yeni Kullanıcı" : "Kullanıcıyı Güncelle"}
+        >
+        <form onSubmit={handleSave} class="flex flex-col gap-3">
+            <input
+                    type="text"
+                    name="name"
+                    placeholder="Ad Soyad"
+                    class="border px-3 py-2 rounded"
+                    required
+                    value={editingUser()?.name || ""}
+            />
+            <input
+                    type="text"
+                    name="username"
+                    placeholder="Kullanıcı Adı"
+                    class="border px-3 py-2 rounded"
+                    required
+                    value={editingUser()?.username || ""}
+            />
+            <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    class="border px-3 py-2 rounded"
+                    required
+                    value={editingUser()?.email || ""}
+            />
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="active" checked={editingUser()?.active} /> Aktif mi?
+            </label>
+            <button
+                    type="submit"
+                    class="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
+            >
+                Kaydet
+            </button>
+        </form>
+        </Modal>
+    </main>
+    );
+    }
