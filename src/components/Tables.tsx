@@ -4,7 +4,9 @@ import { Edit } from 'lucide-solid';
 interface User {
     name: string;
     username: string;
+    email: string;
     picture: string;
+    active: boolean;
 }
 
 interface TablesProps {
@@ -28,6 +30,8 @@ export default function Tables(props: TablesProps) {
                 <tr>
                     <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900">User</th>
                     <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900">Username</th>
+                    <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900">Email</th>
+                    <th class="px-3 py-3 text-left text-sm font-semibold text-gray-900">Active</th>
                     <th class="px-3 py-3 text-right text-sm font-semibold text-gray-900">Actions</th>
                 </tr>
                 </thead>
@@ -49,13 +53,23 @@ export default function Tables(props: TablesProps) {
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
+                            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {user.username}
                             </td>
-                            <td class="px-3 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {user.email}
+                            </td>
+                            <td class="px-3 py-4 whitespace-nowrap text-sm">
+                                {user.active ? (
+                                    <span class="text-green-600 font-medium">✓ Aktif</span>
+                                ) : (
+                                    <span class="text-gray-500">✗ Pasif</span>
+                                )}
+                            </td>
+                            <td class="px-3 py-4 whitespace-nowrap text-right text-sm font-medium align-middle">
                                 <button
                                     onClick={() => handleEdit(user)}
-                                    class="text-indigo-600 hover:text-indigo-900"
+                                    class="text-indigo-600 hover:text-indigo-900 flex items-center justify-center h-full"
                                     title="Edit user"
                                 >
                                     <Edit class="h-5 w-5" />

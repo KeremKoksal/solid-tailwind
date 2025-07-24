@@ -10,6 +10,9 @@ export default function Nav() {
         <li className={`border-b-2 ${active("/")} mx-1.5 sm:mx-6`}>
           <a href="/">Home</a>
         </li>
+        <li className={`border-b-2 ${active("/")} mx-1.5 sm:mx-6`}>
+          <a href="/about">About</a>
+        </li>
         <li className={`border-b-2 ${active("/cards")} mx-1.5 sm:mx-6`}>
           <a href="/cards">Cards</a>
         </li>
