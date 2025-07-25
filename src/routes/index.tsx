@@ -1,6 +1,5 @@
 import { createResource, createSignal, createMemo, For, Show, onMount } from "solid-js";
 import { A } from "@solidjs/router";
-
 import Counter from "~/components/Counter";
 import BadgeExample from "~/components/Badge";
 import Textareas from "~/components/Textareas";
@@ -9,6 +8,11 @@ import Modal from "~/components/Modal";
 import Pagination from "~/components/pagination";
 import Avatar from "~/components/Avatar";
 import SelectMenus from "~/components/SelectMenus";
+import RadioGroup from '~/components/RadioGroup';
+import Toggle from '~/components/Toggle';
+import RadioGroup_2 from '~/components/RadioGroup_2';
+import RadioGroup_3 from '~/components/RadioGroup_3';
+import RadioGroup_4 from '~/components/RadioGroup_4';
 
 const fetchUsers = async () => {
     const res = await fetch("https://randomuser.me/api/?results=40");
@@ -16,12 +20,6 @@ const fetchUsers = async () => {
     return data.results;
 };
 
-import { createSignal } from 'solid-js';
-import RadioGroup from '~/components/RadioGroup';
-import Toggle from '~/components/Toggle';
-import RadioGroup_2 from '~/components/RadioGroup_2';
-import RadioGroup_3 from '~/components/RadioGroup_3';
-import RadioGroup_4 from '~/components/RadioGroup_4';
 
 export default function Home() {
   const [inlineNotif, setInlineNotif] = createSignal(false);
