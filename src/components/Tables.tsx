@@ -66,14 +66,16 @@ export default function Tables(props: TablesProps) {
                                     <span class="text-gray-500">✗ Pasif</span>
                                 )}
                             </td>
-                            <td class="px-3 py-4 whitespace-nowrap text-right text-sm font-medium align-middle">
-                                <button
-                                    onClick={() => handleEdit(user)}
-                                    class="text-indigo-600 hover:text-indigo-900 flex items-center justify-center h-full"
-                                    title="Edit user"
-                                >
-                                    <Edit class="h-5 w-5" />
-                                </button>
+                            <td class="px-3 py-4 whitespace-nowrap text-right text-sm">
+                                <div class="flex justify-end items-center h-full">
+                                    <button
+                                        onClick={() => handleEdit(user)}
+                                        class="text-indigo-600 hover:text-indigo-900"
+                                        title="Edit user"
+                                    >
+                                        <Edit class="h-5 w-5" />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     )}
