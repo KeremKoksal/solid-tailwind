@@ -11,7 +11,7 @@ export default function App() {
     const handleSubmit = (data: any) => {
         console.log("Arıza Kaydedildi:", data);
         setShowForm(false);
-        // API'ye gönderme yapılabilir
+
     };
 
     return (
