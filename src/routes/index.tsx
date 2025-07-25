@@ -21,6 +21,7 @@ const fetchUsers = async () => {
 };
 
 export default function Home() {
+    // Tüm state ve fonksiyon tanımlamalarını buraya, return'ün önüne taşıyın
     const [inlineNotif, setInlineNotif] = createSignal(false);
     const [inlineRoom, setInlineRoom] = createSignal(false);
 
@@ -28,8 +29,13 @@ export default function Home() {
         console.log("Seçilen:", value);
     };
 
+    // Local people state
     const [people, setPeople] = createSignal<any[]>([]);
+
+    // API users resource
     const [users] = createResource(fetchUsers);
+
+    // Filter and sort states
     const [filterGender, setFilterGender] = createSignal("");
     const [sortField, setSortField] = createSignal<"name" | "age">("name");
     const [isModalOpen, setModalOpen] = createSignal(false);
@@ -69,189 +75,10 @@ export default function Home() {
         return filteredSorted().slice(start, start + resultsPerPage);
     });
 
+    // Tek bir return ifadesi kullanın ve tüm içeriği buraya yerleştirin
     return (
-        <main class="p-8 space-y-8 text-center mx-auto text-gray-700">
-            {/* EN ÜSTTE GÖRÜNECEK KISIMLAR */}
-            <h1 class="max-w-6xl text-6xl text-sky-700 font-thin uppercase my-16">
-                Hello world!
-            </h1>
-
-            <Counter />
-
-            <p class="mt-8">
-                Visit{" "}
-                <a
-                    href="https://solidjs.com"
-                    target="_blank"
-                    class="text-sky-600 hover:underline"
-                >
-                    solidjs.com
-                </a>{" "}
-                to learn how to build Solid apps.
-            </p>
-
-            <p class="my-4">
-                <span>Home</span> -{" "}
-                <A href="/about" class="text-sky-600 hover:underline">
-                    About Page
-                </A>
-            </p>
-
-            {/* --- AYRAÇ (GÖRSEL OLARAK KODDAKİ SIRAYI BELİRTMEK İÇİN) --- */}
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
-            {/* Diğer Kısımlar bu ayraçtan sonra başlayacak */}
-
-            {/* AVATAR VE SELECT MENUS */}
-            <Show when={currentUser()}>
-                <Avatar
-                    isStudent={currentUser()?.isStudent}
-                    picture={currentUser()?.picture}
-                />
-            </Show>
-
-            <SelectMenus people={people()} />
-
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
-
-            {/* BADGE EXAMPLE */}
-            <div class="px-4 py-6 flex justify-center">
-                <BadgeExample />
-            </div>
-
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
-
-            {/* TEXTAREAS */}
-            <div class="px-4 py-6 flex justify-center max-w-2xl mx-auto">
-                <Textareas
-                    id="ariza-takip-metin-alani"
-                    title="Arıza Takip Notları"
-                    placeholder="Arızanın detaylarını..."
-                    rows={6}
-                    initialValue="Müşteri şikayeti: "
-                    required
-                    onTextChange={(v) => console.log("Metin:", v)}
-                    pillAction={{
-                        label: "Kaydı Tamamla",
-                        onClick: (v) => alert("Gönderildi: " + v),
-                        disabled: false
-                    }}
-                />
-            </div>
-
-            {/* KULLANICILAR VE FİLTRELEME */}
-            <Heading title="Kullanıcılar" description="Filtrele, sırala veya kullanıcı ekle">
-                <select
-                    value={filterGender()}
-                    onInput={(e) => setFilterGender(e.currentTarget.value)}
-                    class="border rounded px-2 py-1 text-sm"
-                >
-                    <option value="">Filtrele</option>
-                    <option value="male">Erkek</option>
-                    <option value="female">Kadın</option>
-                </select>
-
-                <select
-                    value={sortField()}
-                    onInput={(e) => setSortField(e.currentTarget.value as "name" | "age")}
-                    class="border rounded px-2 py-1 text-sm"
-                >
-                    <option value="name">İsme Göre</option>
-                    <option value="age">Yaşa Göre</option>
-                </select>
-
-                <button
-                    class="bg-white border px-3 py-1 rounded hover:bg-gray-50"
-                    onClick={() => {
-                        setModalMode("update");
-                        setModalOpen(true);
-                    }}
-                >
-                    Güncelle
-                </button>
-
-                <button
-                    class="bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700"
-                    onClick={() => {
-                        setModalMode("create");
-                        setModalOpen(true);
-                    }}
-                >
-                    Yeni Kullanıcı
-                </button>
-            </Heading>
-
-            <Show when={users()} fallback={<p>Yükleniyor...</p>}>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <For each={paginatedUsers()}>
-                        {(user) => (
-                            <div class="border rounded-md p-4 text-left">
-                                <img
-                                    src={user.picture.large}
-                                    alt="avatar"
-                                    class="rounded-full w-24 h-24 mx-auto mb-2"
-                                />
-                                <p class="font-semibold">
-                                    {user.name.first} {user.name.last}
-                                </p>
-                                <p class="text-sm text-gray-500">
-                                    {user.gender}, Age: {user.dob.age}
-                                </p>
-                                <p class="text-sm">{user.email}</p>
-                            </div>
-                        )}
-                    </For>
-                </div>
-
-                <Pagination
-                    currentPage={currentPage()}
-                    totalPages={totalPages()}
-                    totalResults={filteredSorted().length}
-                    onPageChange={setCurrentPage}
-                    resultsPerPage={resultsPerPage}
-                />
-            </Show>
-
-            {/* MODAL */}
-            <Modal
-                open={isModalOpen()}
-                onClose={() => setModalOpen(false)}
-                title={
-                    modalMode() === "create" ? "Yeni Kullanıcı Ekle" : "Kullanıcı Güncelle"
-                }
-            >
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        alert("Saved!");
-                        setModalOpen(false);
-                    }}
-                    class="flex flex-col gap-3"
-                >
-                    <input
-                        type="text"
-                        placeholder="First name"
-                        class="border px-3 py-2 rounded"
-                        required
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        class="border px-3 py-2 rounded"
-                        required
-                    />
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" /> Aktif mi?
-                    </label>
-                    <button
-                        type="submit"
-                        class="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
-                    >
-                        Kaydet
-                    </button>
-                </form>
-            </Modal>
-
-            {/* RADIOGROUP VE TOGGLE BÖLÜMLERİ (Önceden en üstteydi, şimdi alta alındı) */}
+        <main class="p-8 space-y-8 text-center mx-auto text-gray-700"> {/* Sınıfları birleştirdim */}
+            {/* RadioGroup ve Toggle Bölümleri */}
             <section>
                 <div class="mb-4 flex items-center space-x-2">
                     <button
@@ -364,6 +191,177 @@ export default function Home() {
                     <Toggle label="Annual billing (Save 10%)" labelPosition="left" />
                 </div>
             </section>
+
+            {/* Diğer Kısımlar (Hello world, Counter, Users, Modal vb.) */}
+            <h1 class="max-w-6xl text-6xl text-sky-700 font-thin uppercase my-16">
+                Hello world!
+            </h1>
+
+            <Counter />
+
+            <p class="mt-8">
+                Visit{" "}
+                <a
+                    href="https://solidjs.com"
+                    target="_blank"
+                    class="text-sky-600 hover:underline"
+                >
+                    solidjs.com
+                </a>{" "}
+                to learn how to build Solid apps.
+            </p>
+
+            <p class="my-4">
+                <span>Home</span> -{" "}
+                <A href="/about" class="text-sky-600 hover:underline">
+                    About Page
+                </A>
+            </p>
+
+            <Show when={currentUser()}>
+                <Avatar
+                    isStudent={currentUser()?.isStudent}
+                    picture={currentUser()?.picture}
+                />
+            </Show>
+
+            <SelectMenus people={people()} />
+
+            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
+
+            <div class="px-4 py-6 flex justify-center">
+                <BadgeExample />
+            </div>
+
+            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
+
+            <div class="px-4 py-6 flex justify-center max-w-2xl mx-auto">
+                <Textareas
+                    id="ariza-takip-metin-alani"
+                    title="Arıza Takip Notları"
+                    placeholder="Arızanın detaylarını..."
+                    rows={6}
+                    initialValue="Müşteri şikayeti: "
+                    required
+                    onTextChange={(v) => console.log("Metin:", v)}
+                    pillAction={{
+                        label: "Kaydı Tamamla",
+                        onClick: (v) => alert("Gönderildi: " + v),
+                        disabled: false
+                    }}
+                />
+            </div>
+
+            <Heading title="Kullanıcılar" description="Filtrele, sırala veya kullanıcı ekle">
+                <select
+                    value={filterGender()}
+                    onInput={(e) => setFilterGender(e.currentTarget.value)}
+                    class="border rounded px-2 py-1 text-sm"
+                >
+                    <option value="">Filtrele</option>
+                    <option value="male">Erkek</option>
+                    <option value="female">Kadın</option>
+                </select>
+
+                <select
+                    value={sortField()}
+                    onInput={(e) => setSortField(e.currentTarget.value as "name" | "age")}
+                    class="border rounded px-2 py-1 text-sm"
+                >
+                    <option value="name">İsme Göre</option>
+                    <option value="age">Yaşa Göre</option>
+                </select>
+
+                <button
+                    class="bg-white border px-3 py-1 rounded hover:bg-gray-50"
+                    onClick={() => {
+                        setModalMode("update");
+                        setModalOpen(true);
+                    }}
+                >
+                    Güncelle
+                </button>
+
+                <button
+                    class="bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700"
+                    onClick={() => {
+                        setModalMode("create");
+                        setModalOpen(true);
+                    }}
+                >
+                    Yeni Kullanıcı
+                </button>
+            </Heading>
+
+            <Show when={users()} fallback={<p>Yükleniyor...</p>}>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <For each={paginatedUsers()}>
+                        {(user) => (
+                            <div class="border rounded-md p-4 text-left">
+                                <img
+                                    src={user.picture.large}
+                                    alt="avatar"
+                                    class="rounded-full w-24 h-24 mx-auto mb-2"
+                                />
+                                <p class="font-semibold">
+                                    {user.name.first} {user.name.last}
+                                </p>
+                                <p class="text-sm text-gray-500">
+                                    {user.gender}, Age: {user.dob.age}
+                                </p>
+                                <p class="text-sm">{user.email}</p>
+                            </div>
+                        )}
+                    </For>
+                </div>
+
+                <Pagination
+                    currentPage={currentPage()}
+                    totalPages={totalPages()}
+                    totalResults={filteredSorted().length}
+                    onPageChange={setCurrentPage}
+                    resultsPerPage={resultsPerPage}
+                />
+            </Show>
+
+            <Modal
+                open={isModalOpen()}
+                onClose={() => setModalOpen(false)}
+                title={
+                    modalMode() === "create" ? "Yeni Kullanıcı Ekle" : "Kullanıcı Güncelle"
+                }
+            >
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        alert("Saved!");
+                        setModalOpen(false);
+                    }}
+                    class="flex flex-col gap-3"
+                >
+                    <input
+                        type="text"
+                        placeholder="First name"
+                        class="border px-3 py-2 rounded"
+                        required
+                    />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        class="border px-3 py-2 rounded"
+                        required
+                    />
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" /> Aktif mi?
+                    </label>
+                    <button
+                        type="submit"
+                        class="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
+                    >
+                        Kaydet
+                    </button>
+                </form>
+            </Modal>
         </main>
     );
 }
