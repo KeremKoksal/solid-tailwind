@@ -1,6 +1,7 @@
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { Suspense, createSignal } from "solid-js";
+import { Suspense, createSignal, Show } from "solid-js";
+
 import Nav from "~/components/Nav";
 import Textareas from "~/components/Textareas/Textareas";
 import "./app.css";
@@ -9,6 +10,7 @@ export default function App() {
     const [showForm, setShowForm] = createSignal(false);
 
     const handleSubmit = (data: any) => {
+
         console.log('Arıza Kaydedildi:', data);
         setShowForm(false);
         // Burada API'ye gönderme işlemi yapılabilir
@@ -16,7 +18,8 @@ export default function App() {
 
     return (
         <Router
-            root={props => (
+            root={(props) => (
+
                 <>
                     <Nav />
                     <button
@@ -49,17 +52,3 @@ export default function App() {
     );
 }
 
-  return (
-
-      <Router
-        root={props => (
-          <>
-            <Nav />
-            <Suspense>{props.children}</Suspense>
-          </>
-        )}
-      >
-        <FileRoutes />
-      </Router>
-  );
-}
