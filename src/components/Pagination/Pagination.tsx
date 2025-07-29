@@ -43,6 +43,7 @@ const Pagination = (props: PaginationProps) => {
 
         if (props.totalPages <= maxPagesToShow) {
             for (let i = 1; i <= props.totalPages; i++) {
+
                 pages.push(i);
             }
         } else {
@@ -56,12 +57,14 @@ const Pagination = (props: PaginationProps) => {
             }
             if (props.currentPage > props.totalPages - (maxPagesToShow - 2)) {
                 startPage = props.totalPages - (maxPagesToShow - 2);
+
             }
 
             if (startPage > 2) pages.push('...');
             for (let i = startPage; i <= endPage; i++) pages.push(i);
             if (endPage < props.totalPages - 1) pages.push('...');
             pages.push(props.totalPages);
+
         }
 
         return pages;
@@ -100,6 +103,7 @@ const Pagination = (props: PaginationProps) => {
                     type="button"
                     onClick={handlePrevious}
                     disabled={props.currentPage === 1}
+
                     class="rounded border px-3 py-2 text-sm text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Önceki
@@ -113,6 +117,7 @@ const Pagination = (props: PaginationProps) => {
                     type="button"
                     onClick={handleNext}
                     disabled={props.currentPage === props.totalPages}
+
                     class="rounded border px-3 py-2 text-sm text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     Sonraki
@@ -121,11 +126,13 @@ const Pagination = (props: PaginationProps) => {
 
             <div class="hidden sm:flex sm:items-center sm:justify-between w-full">
                 <Show when={props.showResultsInfo !== false}>
+
                     <div class="text-sm text-gray-600 dark:text-gray-300">
                         <span class="font-medium">{paginationInfo().startIndex}</span> -{' '}
                         <span class="font-medium">{paginationInfo().endIndex}</span> arası
                         gösteriliyor, toplam{' '}
                         <span class="font-medium">{props.totalResults}</span> sonuç
+
                     </div>
                 </Show>
 
@@ -134,6 +141,7 @@ const Pagination = (props: PaginationProps) => {
                         type="button"
                         onClick={handlePrevious}
                         disabled={props.currentPage === 1}
+
                         class="rounded-l-md px-3 py-2 text-sm text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Önceki"
                     >
@@ -159,6 +167,7 @@ const Pagination = (props: PaginationProps) => {
                                             : 'px-3 py-2 text-sm border text-gray-700 dark:text-gray-100 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border-gray-300 dark:border-gray-600'
                                     }
                                     aria-current={props.currentPage === page ? 'page' : undefined}
+
                                 >
                                     {page}
                                 </button>
@@ -170,6 +179,7 @@ const Pagination = (props: PaginationProps) => {
                         type="button"
                         onClick={handleNext}
                         disabled={props.currentPage === props.totalPages}
+
                         class="rounded-r-md px-3 py-2 text-sm text-gray-500 dark:text-gray-400 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Sonraki"
                     >
@@ -182,3 +192,4 @@ const Pagination = (props: PaginationProps) => {
 };
 
 export default Pagination;
+
