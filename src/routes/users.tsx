@@ -1,4 +1,4 @@
-import { createSignal, createResource, createMemo, onMount } from "solid-js";
+import { createSignal, createResource, createMemo, onMount ,Show } from "solid-js";
 import Heading from "~/components/Headings";
 import Pagination from "~/components/Pagination";
 import Combobox from "~/components/Combobox";
@@ -192,14 +192,16 @@ export default function UsersPage() {
                 users={paginatedUsers()}
                 onEdit={handleEdit}
             />
+            <Show when={users() && users().length > 0}>
+                <Pagination
+                    currentPage={currentPage()}
+                    totalPages={totalPages()}
+                    totalResults={filteredUsers().length}
+                    onPageChange={setCurrentPage}
+                    resultsPerPage={resultsPerPage}
+                />
+            </Show>
 
-            <Pagination
-                currentPage={currentPage()}
-                totalPages={totalPages()}
-                totalResults={filteredUsers().length}
-                onPageChange={setCurrentPage}
-                resultsPerPage={resultsPerPage}
-            />
 
             <Modal
                 open={isModalOpen()}
