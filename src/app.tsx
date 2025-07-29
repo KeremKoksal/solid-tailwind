@@ -48,3 +48,18 @@ export default function App() {
         </Router>
     );
 }
+
+  return (
+
+      <Router
+        root={props => (
+          <>
+            <Nav />
+            <Suspense>{props.children}</Suspense>
+          </>
+        )}
+      >
+        <FileRoutes />
+      </Router>
+  );
+}

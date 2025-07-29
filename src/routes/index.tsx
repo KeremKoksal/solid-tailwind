@@ -7,6 +7,9 @@ import Textareas from "~/components/Textareas";
 import Heading from "~/components/headings";
 import Modal from "~/components/Modal";
 import Pagination from "~/components/pagination";
+import Avatar from "~/components/Avatar";
+import SelectMenus from "~/components/SelectMenus";
+import {createSignal, onMount, Show} from "solid-js";
 
 const fetchUsers = async () => {
     const res = await fetch("https://randomuser.me/api/?results=40");
@@ -15,7 +18,14 @@ const fetchUsers = async () => {
 };
 
 export default function Home() {
-    const [users] = createResource(fetchUsers);
+    const [people, setPeople] = createSignal<any[]>([]);
+
+    onMount(async () => {
+        const res = await fetch("public/people.json");
+        const data = await res.json();
+        setPeople(data);
+    });
+    const currentUser = () => people()[0];    const [users] = createResource(fetchUsers);
 
     const [filterGender, setFilterGender] = createSignal("");
     const [sortField, setSortField] = createSignal<"name" | "age">("name");
@@ -62,19 +72,16 @@ export default function Home() {
                     href="https://solidjs.com"
                     target="_blank"
                     class="text-sky-600 hover:underline"
-                >
-                    solidjs.com
+                >                    solidjs.com
                 </a>{" "}
                 to learn how to build Solid apps.
             </p>
-
             <p class="my-4">
                 <span>Home</span> -{" "}
                 <A href="/about" class="text-sky-600 hover:underline">
                     About Page
                 </A>
             </p>
-
             <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
 
             <div class="px-4 py-6 flex justify-center">
@@ -211,6 +218,13 @@ export default function Home() {
                     </button>
                 </form>
             </Modal>
+            <Show when={currentUser()}>
+                <Avatar
+                    isStudent={currentUser()?.isStudent}
+                    picture={currentUser()?.picture}
+                />
+            </Show>
+            <SelectMenus people={people()} />
         </main>
     );
 }

@@ -1,0 +1,2868 @@
+ <!-- Applications Section (Hidden by default) -->
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ODTÜ Yurt Yönetim Sistemi - Admin Panel</title>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f0f2f5;
+            color: #1a1a1a;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #1e293b 0%, #334155 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .logo-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .logo-text {
+            opacity: 0;
+            display: none;
+        }
+
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Navigation */
+        .nav-section {
+            padding: 12px 0;
+        }
+
+        .nav-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 20px;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .nav-title {
+            opacity: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-left: 3px solid #3b82f6;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-text {
+            font-size: 0.875rem;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar.collapsed .nav-text {
+            opacity: 0;
+            display: none;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.collapsed + .main-content {
+            margin-left: 70px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 16px 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-btn {
+            position: relative;
+            background: #f3f4f6;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .notification-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .user-menu:hover {
+            background: #e5e7eb;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Dashboard Content */
+        .content {
+            padding: 24px;
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.1) 100%);
+            border-radius: 0 0 0 100%;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.blue {
+            background: #dbeafe;
+            color: #3b82f6;
+        }
+
+        .stat-icon.green {
+            background: #d1fae5;
+            color: #10b981;
+        }
+
+        .stat-icon.purple {
+            background: #ede9fe;
+            color: #8b5cf6;
+        }
+
+        .stat-icon.orange {
+            background: #fed7aa;
+            color: #f97316;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .stat-change.positive {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .stat-change.negative {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .chart-options {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-option {
+            padding: 6px 12px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .chart-option:hover {
+            background: #f9fafb;
+        }
+
+        .chart-option.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: #f9fafb;
+            padding: 12px 24px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .data-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 0.875rem;
+        }
+
+        .data-table tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Buttons */
+        .button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .button-primary:hover {
+            background: #2563eb;
+        }
+
+        .button-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .button-secondary:hover {
+            background: #d1d5db;
+        }
+
+        .button-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .button-success:hover {
+            background: #059669;
+        }
+
+        .button-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .button-danger:hover {
+            background: #dc2626;
+        }
+
+        .button-sm {
+            padding: 6px 12px;
+            font-size: 0.75rem;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-info {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Building/Room Management Specific */
+        .building-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .building-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .building-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .building-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .building-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .building-type {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .building-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .building-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .building-stat-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .building-stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Floor Plan View */
+        .floor-plan {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .floor-selector {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 16px;
+        }
+
+        .floor-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .floor-tab:hover {
+            background: #f3f4f6;
+        }
+
+        .floor-tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+        }
+
+        .room-tile {
+            aspect-ratio: 1;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .room-tile:hover {
+            border-color: #3b82f6;
+            transform: scale(1.05);
+        }
+
+        .room-tile.occupied {
+            background: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        .room-tile.available {
+            background: #d1fae5;
+            border-color: #86efac;
+        }
+
+        .room-tile.maintenance {
+            background: #fef3c7;
+            border-color: #fde68a;
+        }
+
+        .room-number {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .room-capacity {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Reports Section */
+        .report-filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #374151;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #3b82f6;
+        }
+
+        /* Action Menu */
+        .action-menu {
+            position: relative;
+            display: inline-block;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .action-button:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .action-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 4px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 8px;
+            min-width: 160px;
+            display: none;
+            z-index: 10;
+        }
+
+        .action-dropdown.show {
+            display: block;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            color: #374151;
+            transition: background 0.2s;
+        }
+
+        .action-item:hover {
+            background: #f3f4f6;
+        }
+
+        .action-item.danger {
+            color: #ef4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .building-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Charts Placeholder */
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+        }
+    
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 24px;
+    border: 1px solid #888;
+    width: 60%;
+    border-radius: 8px;
+    position: relative;
+}
+</style>
+</head>
+<body>
+<div class="app-container">
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="logo">
+<div class="logo-icon">Y</div>
+<span class="logo-text">Yurt Yönetimi</span>
+</div>
+<button class="toggle-btn" onclick="toggleSidebar()">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<nav class="nav-section">
+<div class="nav-title">Ana Menü</div>
+<div class="nav-item active" onclick="showSection('dashboard')">
+<span class="nav-icon">📊</span>
+<span class="nav-text">Dashboard</span>
+</div>
+<div class="nav-item" onclick="showSection('applications')">
+<span class="nav-icon">📝</span>
+<span class="nav-text">Başvurular</span>
+<span class="nav-badge">24</span>
+</div>
+<div class="nav-item" onclick="showSection('students')">
+<span class="nav-icon">👥</span>
+<span class="nav-text">Öğrenciler</span>
+</div>
+<div class="nav-item" onclick="showSection('buildings')">
+<span class="nav-icon">🏢</span>
+<span class="nav-text">Binalar &amp; Odalar</span>
+</div>
+<div class="nav-item" onclick="showSection('payments')">
+<span class="nav-icon">💰</span>
+<span class="nav-text">Ödemeler</span>
+</div>
+<div class="nav-item" onclick="showSection('attendance')">
+<span class="nav-icon">📋</span>
+<span class="nav-text">Yoklama</span>
+</div>
+</nav>
+<nav class="nav-section">
+<div class="nav-title">Yönetim</div>
+<div class="nav-item" onclick="showSection('permissions')">
+<span class="nav-icon">✅</span>
+<span class="nav-text">İzinler</span>
+<span class="nav-badge">5</span>
+</div>
+<div class="nav-item" onclick="showSection('visitors')">
+<span class="nav-icon">🚶</span>
+<span class="nav-text">Ziyaretçiler</span>
+</div>
+<div class="nav-item" onclick="showSection('maintenance')">
+<span class="nav-icon">🔧</span>
+<span class="nav-text">Bakım &amp; Arıza</span>
+<span class="nav-badge">12</span>
+</div>
+<div class="nav-item" onclick="showSection('discipline')">
+<span class="nav-icon">⚠️</span>
+<span class="nav-text">Disiplin</span>
+</div>
+</nav>
+<nav class="nav-section">
+<div class="nav-title">Raporlar</div>
+<div class="nav-item" onclick="showSection('reports')">
+<span class="nav-icon">📈</span>
+<span class="nav-text">İstatistikler</span>
+</div>
+<div class="nav-item" onclick="showSection('financial')">
+<span class="nav-icon">💳</span>
+<span class="nav-text">Mali Raporlar</span>
+</div>
+<div class="nav-item" onclick="showSection('occupancy')">
+<span class="nav-icon">🏠</span>
+<span class="nav-text">Doluluk Raporları</span>
+</div>
+</nav>
+<nav class="nav-section">
+<div class="nav-title">Sistem</div>
+<div class="nav-item" onclick="showSection('settings')">
+<span class="nav-icon">⚙️</span>
+<span class="nav-text">Ayarlar</span>
+</div>
+<div class="nav-item" onclick="showSection('users')">
+<span class="nav-icon">👤</span>
+<span class="nav-text">Kullanıcılar</span>
+</div>
+<div class="nav-item" onclick="showSection('logs')">
+<span class="nav-icon">📄</span>
+<span class="nav-text">Sistem Logları</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="main-content">
+<!-- Header -->
+<header class="header">
+<div class="header-left">
+<button class="toggle-btn" id="mobileMenuBtn" onclick="toggleSidebar()" style="display: none;">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<div class="search-bar">
+<svg class="search-icon" fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<input class="search-input" placeholder="Öğrenci, oda veya işlem ara..." type="text"/>
+</div>
+</div>
+<div class="header-right">
+<button class="notification-btn">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="notification-dot"></span>
+</button>
+<div class="user-menu">
+<div class="user-avatar">YM</div>
+<div>
+<div style="font-weight: 500;">Yönetici</div>
+<div style="font-size: 0.75rem; color: #6b7280;">Admin</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="content" id="dashboard-section">
+<h1 class="page-title">Dashboard</h1>
+<p class="page-subtitle">Yurt yönetim sistemi genel görünümü</p>
+<!-- Stats Grid -->
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon blue">🏠</div>
+</div>
+<div class="stat-value">2,456</div>
+<div class="stat-label">Toplam Öğrenci</div>
+<span class="stat-change positive">
+<svg fill="none" height="12" stroke="currentColor" viewbox="0 0 24 24" width="12">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            12% artış
+                        </span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon green">✅</div>
+</div>
+<div class="stat-value">89%</div>
+<div class="stat-label">Doluluk Oranı</div>
+<span class="stat-change positive">
+<svg fill="none" height="12" stroke="currentColor" viewbox="0 0 24 24" width="12">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            5% artış
+                        </span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon purple">📝</div>
+</div>
+<div class="stat-value">324</div>
+<div class="stat-label">Bekleyen Başvuru</div>
+<span class="stat-change negative">
+<svg fill="none" height="12" stroke="currentColor" viewbox="0 0 24 24" width="12">
+<path d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            8% azalış
+                        </span>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon orange">💰</div>
+</div>
+<div class="stat-value">₺2.8M</div>
+<div class="stat-label">Aylık Gelir</div>
+<span class="stat-change positive">
+<svg fill="none" height="12" stroke="currentColor" viewbox="0 0 24 24" width="12">
+<path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            15% artış
+                        </span>
+</div>
+</div>
+<!-- Charts Row -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px;">
+<!-- Bar Chart -->
+<div class="chart-container">
+<div class="chart-header">
+<h3 class="chart-title">Haftalık Doluluk Trendi</h3>
+<div class="chart-options">
+<button class="chart-option active">Haftalık</button>
+<button class="chart-option">Aylık</button>
+<button class="chart-option">Yıllık</button>
+</div>
+</div>
+<div style="position: relative; height: 300px; padding: 20px;">
+<!-- Y-axis labels -->
+<div style="position: absolute; left: 0; top: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; font-size: 0.75rem; color: #6b7280;">
+<span>100%</span>
+<span>75%</span>
+<span>50%</span>
+<span>25%</span>
+<span>0%</span>
+</div>
+<!-- Chart area -->
+<div style="margin-left: 40px; height: 100%; position: relative;">
+<!-- Grid lines -->
+<div style="position: absolute; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
+<div style="border-bottom: 1px dashed #e5e7eb; width: 100%;"></div>
+<div style="border-bottom: 1px dashed #e5e7eb; width: 100%;"></div>
+<div style="border-bottom: 1px dashed #e5e7eb; width: 100%;"></div>
+<div style="border-bottom: 1px dashed #e5e7eb; width: 100%;"></div>
+<div style="border-bottom: 1px solid #e5e7eb; width: 100%;"></div>
+</div>
+<!-- Bars -->
+<div style="position: relative; height: 100%; display: flex; align-items: flex-end; justify-content: space-around; padding: 0 20px;">
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #3b82f6, #60a5fa); height: 85%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">85%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Pzt</span>
+</div>
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #3b82f6, #60a5fa); height: 87%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">87%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Sal</span>
+</div>
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #3b82f6, #60a5fa); height: 89%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">89%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Çar</span>
+</div>
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #3b82f6, #60a5fa); height: 91%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">91%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Per</span>
+</div>
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #10b981, #34d399); height: 93%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">93%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Cum</span>
+</div>
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #f59e0b, #fbbf24); height: 82%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">82%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Cmt</span>
+</div>
+<div style="width: 12%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<div style="width: 100%; background: linear-gradient(to top, #f59e0b, #fbbf24); height: 78%; border-radius: 4px 4px 0 0; position: relative;">
+<span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; font-weight: 600;">78%</span>
+</div>
+<span style="font-size: 0.75rem; color: #6b7280;">Pzr</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Daily Summary Timeline -->
+<div class="chart-container">
+<div class="chart-header">
+<h3 class="chart-title">Günlük Özet</h3>
+<span style="font-size: 0.875rem; color: #6b7280;">3 Haziran 2025</span>
+</div>
+<div style="padding: 20px;">
+<!-- Timeline -->
+<div style="position: relative;">
+<!-- Timeline line -->
+<div style="position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: #e5e7eb;"></div>
+<!-- Timeline items -->
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; gap: 16px;">
+<div style="width: 24px; height: 24px; border-radius: 50%; background: #3b82f6; border: 3px solid white; box-shadow: 0 0 0 2px #e5e7eb; z-index: 1;"></div>
+<div style="flex: 1;">
+<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">09:00</div>
+<div style="font-weight: 500; margin-bottom: 2px;">24 Yeni Başvuru</div>
+<div style="font-size: 0.875rem; color: #6b7280;">Yaz dönemi başvuruları</div>
+</div>
+</div>
+<div style="display: flex; gap: 16px;">
+<div style="width: 24px; height: 24px; border-radius: 50%; background: #10b981; border: 3px solid white; box-shadow: 0 0 0 2px #e5e7eb; z-index: 1;"></div>
+<div style="flex: 1;">
+<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">11:30</div>
+<div style="font-weight: 500; margin-bottom: 2px;">15 Ödeme Alındı</div>
+<div style="font-size: 0.875rem; color: #6b7280;">₺18,750 tahsil edildi</div>
+</div>
+</div>
+<div style="display: flex; gap: 16px;">
+<div style="width: 24px; height: 24px; border-radius: 50%; background: #f59e0b; border: 3px solid white; box-shadow: 0 0 0 2px #e5e7eb; z-index: 1;"></div>
+<div style="flex: 1;">
+<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">14:00</div>
+<div style="font-weight: 500; margin-bottom: 2px;">3 Arıza Bildirimi</div>
+<div style="font-size: 0.875rem; color: #6b7280;">2 klima, 1 tesisat</div>
+</div>
+</div>
+<div style="display: flex; gap: 16px;">
+<div style="width: 24px; height: 24px; border-radius: 50%; background: #8b5cf6; border: 3px solid white; box-shadow: 0 0 0 2px #e5e7eb; z-index: 1;"></div>
+<div style="flex: 1;">
+<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 4px;">16:45</div>
+<div style="font-weight: 500; margin-bottom: 2px;">8 İzin Onayı</div>
+<div style="font-size: 0.875rem; color: #6b7280;">Hafta sonu izinleri</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Building Occupancy -->
+<div class="chart-container" style="margin-bottom: 24px;">
+<div class="chart-header">
+<h3 class="chart-title">Bina Doluluk Durumu</h3>
+<a class="button button-secondary button-sm" href="#">Detaylı Görünüm</a>
+</div>
+<div style="padding: 20px;">
+<div style="display: grid; gap: 20px;">
+<!-- Building 1 -->
+<div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<div>
+<span style="font-weight: 500;">Erkek Yurdu A</span>
+<span style="font-size: 0.875rem; color: #6b7280; margin-left: 8px;">412/450</span>
+</div>
+<span style="font-weight: 600; color: #3b82f6;">91.5%</span>
+</div>
+<div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden;">
+<div style="background: linear-gradient(to right, #3b82f6, #60a5fa); height: 100%; width: 91.5%; transition: width 0.3s ease;"></div>
+</div>
+</div>
+<!-- Building 2 -->
+<div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<div>
+<span style="font-weight: 500;">Erkek Yurdu B</span>
+<span style="font-size: 0.875rem; color: #6b7280; margin-left: 8px;">342/380</span>
+</div>
+<span style="font-weight: 600; color: #3b82f6;">90%</span>
+</div>
+<div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden;">
+<div style="background: linear-gradient(to right, #3b82f6, #60a5fa); height: 100%; width: 90%; transition: width 0.3s ease;"></div>
+</div>
+</div>
+<!-- Building 3 -->
+<div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<div>
+<span style="font-weight: 500;">Kız Yurdu A</span>
+<span style="font-size: 0.875rem; color: #6b7280; margin-left: 8px;">398/420</span>
+</div>
+<span style="font-weight: 600; color: #10b981;">94.7%</span>
+</div>
+<div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden;">
+<div style="background: linear-gradient(to right, #10b981, #34d399); height: 100%; width: 94.7%; transition: width 0.3s ease;"></div>
+</div>
+</div>
+<!-- Building 4 -->
+<div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+<div>
+<span style="font-weight: 500;">Kız Yurdu B</span>
+<span style="font-size: 0.875rem; color: #6b7280; margin-left: 8px;">0/350</span>
+<span class="badge badge-warning" style="margin-left: 8px;">Bakımda</span>
+</div>
+<span style="font-weight: 600; color: #6b7280;">0%</span>
+</div>
+<div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden;">
+<div style="background: #fbbf24; height: 100%; width: 0%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+<!-- Recent Activities -->
+<div class="table-container">
+<div class="table-header">
+<h3 class="table-title">Son İşlemler</h3>
+<a class="button button-secondary button-sm" href="#">Tümünü Gör</a>
+</div>
+<table class="data-table">
+<thead>
+<tr>
+<th>İşlem</th>
+<th>Öğrenci</th>
+<th>Tarih</th>
+<th>Durum</th>
+<th>İşlemler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="display: flex; align-items: center; gap: 8px;"><span style="color: #3b82f6;">📝</span> Yeni Başvuru</span></td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Ahmet Yılmaz</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">ahmet.yilmaz@metu.edu.tr</span></div></td>
+<td>10 dk önce</td>
+<td><span class="badge badge-warning">Bekliyor</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td><span style="display: flex; align-items: center; gap: 8px;"><span style="color: #10b981;">✅</span> İzin Talebi</span></td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Ayşe Kaya</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">ayse.kaya@metu.edu.tr</span></div></td>
+<td>30 dk önce</td>
+<td><span class="badge badge-success">Onaylandı</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td><span style="display: flex; align-items: center; gap: 8px;"><span style="color: #f59e0b;">🔧</span> Arıza Bildirimi</span></td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Mehmet Demir</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">mehmet.demir@metu.edu.tr</span></div></td>
+<td>1 saat önce</td>
+<td><span class="badge badge-info">İşlemde</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td><span style="display: flex; align-items: center; gap: 8px;"><span style="color: #10b981;">💰</span> Ödeme</span></td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Zeynep Şahin</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">zeynep.sahin@metu.edu.tr</span></div></td>
+<td>2 saat önce</td>
+<td><span class="badge badge-success">Tamamlandı</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td><span style="display: flex; align-items: center; gap: 8px;"><span style="color: #8b5cf6;">🚶</span> Ziyaretçi Kaydı</span></td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Ali Koç</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">ali.koc@metu.edu.tr</span></div></td>
+<td>3 saat önce</td>
+<td><span class="badge badge-info">Aktif</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Payment Summary & Maintenance -->
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<!-- Payment Summary -->
+<div class="chart-container">
+<div class="chart-header">
+<h3 class="chart-title">Ödeme Özeti</h3>
+<span style="font-size: 0.75rem; color: #6b7280;">Haziran 2025</span>
+</div>
+<div style="padding: 20px;">
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+<span style="font-size: 0.875rem; color: #6b7280;">Tahsil Edilen</span>
+<span style="font-weight: 600; color: #10b981;">₺2,456,000</span>
+</div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+<span style="font-size: 0.875rem; color: #6b7280;">Bekleyen</span>
+<span style="font-weight: 600; color: #f59e0b;">₺344,000</span>
+</div>
+<div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #e5e7eb;">
+<span style="font-weight: 500;">Toplam</span>
+<span style="font-weight: 700; font-size: 1.125rem;">₺2,800,000</span>
+</div>
+</div>
+<div>
+<div style="font-size: 0.75rem; color: #6b7280; margin-bottom: 8px;">Tahsilat Oranı</div>
+<div style="background: #e5e7eb; height: 8px; border-radius: 4px; overflow: hidden;">
+<div style="background: linear-gradient(to right, #10b981, #34d399); height: 100%; width: 87.7%;"></div>
+</div>
+<div style="font-size: 0.875rem; font-weight: 600; color: #10b981; margin-top: 4px;">87.7%</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Maintenance Summary -->
+<div class="chart-container">
+<div class="chart-header">
+<h3 class="chart-title">Bakım/Arıza Durumu</h3>
+</div>
+<div style="padding: 20px;">
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+<div style="text-align: center; padding: 16px; background: #fee2e2; border-radius: 8px;">
+<div style="font-size: 2rem; font-weight: 700; color: #ef4444;">12</div>
+<div style="font-size: 0.875rem; color: #991b1b;">Bekleyen</div>
+</div>
+<div style="text-align: center; padding: 16px; background: #fef3c7; border-radius: 8px;">
+<div style="font-size: 2rem; font-weight: 700; color: #f59e0b;">8</div>
+<div style="font-size: 0.875rem; color: #92400e;">İşlemde</div>
+</div>
+<div style="text-align: center; padding: 16px; background: #d1fae5; border-radius: 8px;">
+<div style="font-size: 2rem; font-weight: 700; color: #10b981;">45</div>
+<div style="font-size: 0.875rem; color: #065f46;">Bu Ay Çözülen</div>
+</div>
+<div style="text-align: center; padding: 16px; background: #dbeafe; border-radius: 8px;">
+<div style="font-size: 2rem; font-weight: 700; color: #3b82f6;">1.8</div>
+<div style="font-size: 0.875rem; color: #1e3a8a;">Ort. Çözüm (gün)</div>
+</div>
+</div>
+<div style="margin-top: 16px;">
+<div style="font-size: 0.875rem; font-weight: 500; margin-bottom: 8px;">En Sık Arıza Türleri</div>
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-size: 0.75rem; color: #6b7280;">Klima</span>
+<span style="font-size: 0.75rem; font-weight: 500;">35%</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-size: 0.75rem; color: #6b7280;">Tesisat</span>
+<span style="font-size: 0.75rem; font-weight: 500;">28%</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-size: 0.75rem; color: #6b7280;">Elektrik</span>
+<span style="font-size: 0.75rem; font-weight: 500;">22%</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+<span style="font-size: 0.75rem; color: #6b7280;">Diğer</span>
+<span style="font-size: 0.75rem; font-weight: 500;">15%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Buildings & Rooms Section (Hidden by default) -->
+<div class="content" id="buildings-section" style="display: none;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+<div>
+<h1 class="page-title">Binalar &amp; Odalar</h1>
+<p class="page-subtitle">Yurt binaları ve oda yönetimi</p>
+</div>
+<button class="button button-primary" onclick="openModal('buildingModal')">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                        Yeni Bina Ekle
+                    </button>
+</div>
+<!-- Building Cards -->
+<div class="building-grid">
+<div class="building-card" onclick="showBuildingDetails('Erkek Yurdu A')">
+<div class="building-header">
+<div>
+<div class="building-name">Erkek Yurdu A</div>
+<div class="building-type">Erkek Yurdu</div>
+</div>
+<span class="badge badge-success">Aktif</span>
+</div>
+<div class="building-stats">
+<div class="building-stat">
+<div class="building-stat-value">450</div>
+<div class="building-stat-label">Kapasite</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">412</div>
+<div class="building-stat-label">Dolu</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">91.5%</div>
+<div class="building-stat-label">Doluluk</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">5</div>
+<div class="building-stat-label">Kat</div>
+</div>
+</div>
+</div>
+<div class="building-card" onclick="showBuildingDetails('Erkek Yurdu B')">
+<div class="building-header">
+<div>
+<div class="building-name">Erkek Yurdu B</div>
+<div class="building-type">Erkek Yurdu</div>
+</div>
+<span class="badge badge-success">Aktif</span>
+</div>
+<div class="building-stats">
+<div class="building-stat">
+<div class="building-stat-value">380</div>
+<div class="building-stat-label">Kapasite</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">342</div>
+<div class="building-stat-label">Dolu</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">90%</div>
+<div class="building-stat-label">Doluluk</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">4</div>
+<div class="building-stat-label">Kat</div>
+</div>
+</div>
+</div>
+<div class="building-card" onclick="showBuildingDetails('Kız Yurdu A')">
+<div class="building-header">
+<div>
+<div class="building-name">Kız Yurdu A</div>
+<div class="building-type">Kız Yurdu</div>
+</div>
+<span class="badge badge-success">Aktif</span>
+</div>
+<div class="building-stats">
+<div class="building-stat">
+<div class="building-stat-value">420</div>
+<div class="building-stat-label">Kapasite</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">398</div>
+<div class="building-stat-label">Dolu</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">94.7%</div>
+<div class="building-stat-label">Doluluk</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">5</div>
+<div class="building-stat-label">Kat</div>
+</div>
+</div>
+</div>
+<div class="building-card" onclick="showBuildingDetails('Kız Yurdu B')">
+<div class="building-header">
+<div>
+<div class="building-name">Kız Yurdu B</div>
+<div class="building-type">Kız Yurdu</div>
+</div>
+<span class="badge badge-warning">Bakımda</span>
+</div>
+<div class="building-stats">
+<div class="building-stat">
+<div class="building-stat-value">350</div>
+<div class="building-stat-label">Kapasite</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">0</div>
+<div class="building-stat-label">Dolu</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">0%</div>
+<div class="building-stat-label">Doluluk</div>
+</div>
+<div class="building-stat">
+<div class="building-stat-value">4</div>
+<div class="building-stat-label">Kat</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floor Plan -->
+<div class="floor-plan" id="floorPlanSection" style="display: none;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<h3 class="chart-title" id="buildingTitle">Erkek Yurdu A - Kat Planı</h3>
+<button class="button button-secondary" onclick="hideFloorPlan()">Geri</button>
+</div>
+<div class="floor-selector">
+<button class="floor-tab active">1. Kat</button>
+<button class="floor-tab">2. Kat</button>
+<button class="floor-tab">3. Kat</button>
+<button class="floor-tab">4. Kat</button>
+<button class="floor-tab">5. Kat</button>
+</div>
+<div class="room-grid">
+<div class="room-tile occupied" onclick="showRoomDetails('101')">
+<div class="room-number">101</div>
+<div class="room-capacity">4/4</div>
+</div>
+<div class="room-tile occupied" onclick="showRoomDetails('102')">
+<div class="room-number">102</div>
+<div class="room-capacity">3/4</div>
+</div>
+<div class="room-tile available" onclick="showRoomDetails('103')">
+<div class="room-number">103</div>
+<div class="room-capacity">0/4</div>
+</div>
+<div class="room-tile available" onclick="showRoomDetails('104')">
+<div class="room-number">104</div>
+<div class="room-capacity">1/4</div>
+</div>
+<div class="room-tile maintenance" onclick="showRoomDetails('105')">
+<div class="room-number">105</div>
+<div class="room-capacity">Bakımda</div>
+</div>
+<div class="room-tile occupied" onclick="showRoomDetails('106')">
+<div class="room-number">106</div>
+<div class="room-capacity">4/4</div>
+</div>
+<div class="room-tile available" onclick="showRoomDetails('107')">
+<div class="room-number">107</div>
+<div class="room-capacity">2/4</div>
+</div>
+<div class="room-tile occupied" onclick="showRoomDetails('108')">
+<div class="room-number">108</div>
+<div class="room-capacity">4/4</div>
+</div>
+</div>
+<div style="margin-top: 24px;">
+<button class="button button-primary" onclick="openModal('roomModal')">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Yeni Oda Ekle
+                        </button>
+</div>
+</div>
+</div>
+<!-- Students Section (Hidden by default) -->
+<div class="content" id="students-section" style="display: none;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+<div>
+<h1 class="page-title">Öğrenci Yönetimi</h1>
+<p class="page-subtitle">Yurtta kalan öğrencilerin listesi ve yönetimi</p>
+</div>
+<div style="display: flex; gap: 12px;">
+<button class="button button-secondary">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            İçe Aktar
+                        </button>
+<button class="button button-secondary">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Dışa Aktar
+                        </button>
+<button class="button button-primary">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Yeni Öğrenci
+                        </button>
+</div>
+</div>
+<!-- Filters -->
+<div class="report-filters">
+<div class="filter-row">
+<div class="form-group" style="flex: 1;">
+<label class="form-label">Arama</label>
+<input class="form-input" placeholder="İsim, numara veya oda..." type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Yurt</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Erkek Yurdu A</option>
+<option>Erkek Yurdu B</option>
+<option>Kız Yurdu A</option>
+<option>Kız Yurdu B</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Durum</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Aktif</option>
+<option>İzinli</option>
+<option>Mezun</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Borç Durumu</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Borcu Yok</option>
+<option>Borcu Var</option>
+</select>
+</div>
+<button class="button button-primary">Filtrele</button>
+</div>
+</div>
+<!-- Students Table -->
+<div class="table-container">
+<table class="data-table">
+<thead>
+<tr>
+<th>Öğrenci No</th>
+<th>Ad Soyad</th>
+<th>Fakülte/Bölüm</th>
+<th>Yurt/Oda</th>
+<th>Borç</th>
+<th>Durum</th>
+<th>İşlemler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2021405123</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Elif Aydın</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">elif.aydin@metu.edu.tr</span></div></td>
+<td>Mühendislik / Bilgisayar Müh.</td>
+<td>Erkek A / 204</td>
+<td><span class="badge badge-success">Ödendi</span></td>
+<td><span class="badge badge-info">Aktif</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>2022406789</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Mustafa Arslan</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">mustafa.arslan@metu.edu.tr</span></div></td>
+<td>Fen-Edebiyat / Matematik</td>
+<td>Kız A / 312</td>
+<td><span class="badge badge-danger">₺450</span></td>
+<td><span class="badge badge-warning">İzinli</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Reports Section (Hidden by default) -->
+<div class="content" id="reports-section" style="display: none;">
+<h1 class="page-title">İstatistikler ve Raporlar</h1>
+<p class="page-subtitle">Detaylı yurt istatistikleri ve analizler</p>
+<!-- Tabs -->
+<div class="tabs">
+<button class="tab active">Genel Bakış</button>
+<button class="tab">Doluluk Analizi</button>
+<button class="tab">Gelir Analizi</button>
+<button class="tab">Öğrenci Analizi</button>
+</div>
+<!-- Report Filters -->
+<div class="report-filters">
+<div class="filter-row">
+<div class="form-group">
+<label class="form-label">Tarih Aralığı</label>
+<select class="form-select">
+<option>Son 30 Gün</option>
+<option>Son 3 Ay</option>
+<option>Son 6 Ay</option>
+<option>Son 1 Yıl</option>
+<option>Özel Tarih</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Yurt</label>
+<select class="form-select">
+<option>Tüm Yurtlar</option>
+<option>Erkek Yurdu A</option>
+<option>Erkek Yurdu B</option>
+<option>Kız Yurdu A</option>
+<option>Kız Yurdu B</option>
+</select>
+</div>
+<button class="button button-primary">Rapor Oluştur</button>
+<button class="button button-secondary">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            PDF İndir
+                        </button>
+</div>
+</div>
+<!-- Report Grid -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+<div class="chart-container">
+<h3 class="chart-title">Yurt Doluluk Oranları</h3>
+<div class="chart-placeholder" style="height: 250px;">
+<span>Doluluk Oranı Grafiği</span>
+</div>
+</div>
+<div class="chart-container">
+<h3 class="chart-title">Aylık Gelir Trendi</h3>
+<div class="chart-placeholder" style="height: 250px;">
+<span>Gelir Grafiği</span>
+</div>
+</div>
+</div>
+<!-- Summary Cards -->
+<div class="stats-grid">
+<div class="stat-card">
+<div class="stat-value">₺15.2M</div>
+<div class="stat-label">Yıllık Toplam Gelir</div>
+<div style="margin-top: 12px; font-size: 0.875rem; color: #6b7280;">
+<div>Tahsil Edilen: ₺14.8M</div>
+<div>Bekleyen: ₺400K</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-value">2,756</div>
+<div class="stat-label">Toplam Kapasite</div>
+<div style="margin-top: 12px; font-size: 0.875rem; color: #6b7280;">
+<div>Dolu: 2,456</div>
+<div>Boş: 300</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-value">97%</div>
+<div class="stat-label">Tahsilat Oranı</div>
+<div style="margin-top: 12px; font-size: 0.875rem; color: #6b7280;">
+<div>Zamanında: 85%</div>
+<div>Gecikmeli: 12%</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-value">324</div>
+<div class="stat-label">Başvuru/Ayrılma</div>
+<div style="margin-top: 12px; font-size: 0.875rem; color: #6b7280;">
+<div>Yeni Başvuru: 276</div>
+<div>Ayrılan: 48</div>
+</div>
+</div>
+</div>
+<!-- Detailed Table -->
+<div class="table-container">
+<div class="table-header">
+<h3 class="table-title">Fakülte Bazlı Dağılım</h3>
+</div>
+<table class="data-table">
+<thead>
+<tr>
+<th>Fakülte</th>
+<th>Öğrenci Sayısı</th>
+<th>Oran</th>
+<th>Erkek</th>
+<th>Kız</th>
+<th>Ort. CGPA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mühendislik Fakültesi</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Fatma Çelik</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">fatma.celik@metu.edu.tr</span></div></td>
+<td>34.8%</td>
+<td>612</td>
+<td>244</td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>Fen-Edebiyat Fakültesi</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Burak Yıldız</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">burak.yildiz@metu.edu.tr</span></div></td>
+<td>21.3%</td>
+<td>289</td>
+<td>235</td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>İktisadi ve İdari Bilimler</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Emine Aksoy</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">emine.aksoy@metu.edu.tr</span></div></td>
+<td>18.6%</td>
+<td>234</td>
+<td>222</td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>Mimarlık Fakültesi</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Cemre Özkan</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">cemre.ozkan@metu.edu.tr</span></div></td>
+<td>13.9%</td>
+<td>156</td>
+<td>186</td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>Eğitim Fakültesi</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Oğuz Kaan</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">oguz.kaan@metu.edu.tr</span></div></td>
+<td>11.3%</td>
+<td>98</td>
+<td>180</td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="content" id="applications-section" style="display: none;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+<div>
+<h1 class="page-title">Başvuru Yönetimi</h1>
+<p class="page-subtitle">2025-2026 Akademik Yılı Yurt Başvuruları</p>
+</div>
+<div style="display: flex; gap: 12px;">
+<button class="button button-secondary">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Puanlama Ayarları
+                        </button>
+<button class="button button-primary" onclick="openModal('newApplicationModal')">
+<svg fill="none" height="20" stroke="currentColor" viewbox="0 0 24 24" width="20">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Manuel Başvuru
+                        </button>
+</div>
+</div>
+<!-- Application Stats -->
+<div class="stats-grid" style="margin-bottom: 24px;">
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon blue">📝</div>
+</div>
+<div class="stat-value">324</div>
+<div class="stat-label">Toplam Başvuru</div>
+<div style="margin-top: 12px;">
+<div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: #6b7280;">
+<span>Erkek: 186</span>
+<span>Kız: 138</span>
+</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon orange">⏳</div>
+</div>
+<div class="stat-value">124</div>
+<div class="stat-label">Değerlendirme Bekleyen</div>
+<div style="margin-top: 12px;">
+<div style="font-size: 0.75rem; color: #f59e0b;">Son 7 günde: 45</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon green">✅</div>
+</div>
+<div class="stat-value">156</div>
+<div class="stat-label">Onaylanan</div>
+<div style="margin-top: 12px;">
+<div style="font-size: 0.75rem; color: #10b981;">Yerleştirilen: 142</div>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-header">
+<div class="stat-icon purple">📊</div>
+</div>
+<div class="stat-value">82.4</div>
+<div class="stat-label">Ortalama Puan</div>
+<div style="margin-top: 12px;">
+<div style="font-size: 0.75rem; color: #6b7280;">Min: 45 - Max: 98</div>
+</div>
+</div>
+</div>
+<!-- Filters and Actions -->
+<div class="report-filters" style="margin-bottom: 24px;">
+<div class="filter-row">
+<div class="form-group">
+<label class="form-label">Dönem</label>
+<select class="form-select">
+<option>2025-2026 Güz</option>
+<option>2025 Yaz</option>
+<option>2024-2025 Bahar</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Durum</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Bekleyen</option>
+<option>Onaylanan</option>
+<option>Reddedilen</option>
+<option>İptal</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Cinsiyet</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Erkek</option>
+<option>Kız</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Puan Aralığı</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>90-100</option>
+<option>80-89</option>
+<option>70-79</option>
+<option>60-69</option>
+<option>0-59</option>
+</select>
+</div>
+<div class="form-group" style="flex: 1;">
+<label class="form-label">Arama</label>
+<input class="form-input" placeholder="İsim, numara veya TC..." type="text"/>
+</div>
+<button class="button button-primary">Filtrele</button>
+</div>
+</div>
+<!-- Bulk Actions Bar -->
+<div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+<div style="display: flex; align-items: center; gap: 16px;">
+<input id="selectAll" style="width: 18px; height: 18px; cursor: pointer;" type="checkbox"/>
+<span style="font-size: 0.875rem; color: #6b7280;">
+<span id="selectedCount">0</span> başvuru seçildi
+                        </span>
+</div>
+<div style="display: flex; gap: 8px;">
+<button class="button button-success button-sm" disabled="">
+<svg fill="none" height="16" stroke="currentColor" viewbox="0 0 24 24" width="16">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Toplu Onayla
+                        </button>
+<button class="button button-danger button-sm" disabled="">
+<svg fill="none" height="16" stroke="currentColor" viewbox="0 0 24 24" width="16">
+<path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Toplu Reddet
+                        </button>
+<button class="button button-secondary button-sm" disabled="">
+<svg fill="none" height="16" stroke="currentColor" viewbox="0 0 24 24" width="16">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+                            Excel İndir
+                        </button>
+</div>
+</div>
+<!-- Applications Table -->
+<div class="table-container">
+<table class="data-table">
+<thead>
+<tr>
+<th style="width: 40px;">
+<input style="width: 16px; height: 16px;" type="checkbox"/>
+</th>
+<th>Başvuru No</th>
+<th>Öğrenci Bilgileri</th>
+<th>Fakülte/Bölüm</th>
+<th>Puan Detayı</th>
+<th>Öncelik</th>
+<th>Durum</th>
+<th>İşlemler</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<input class="row-checkbox" style="width: 16px; height: 16px;" type="checkbox"/>
+</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Melis Tunç</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">melis.tunc@metu.edu.tr</span></div></td>
+<td>
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500;">AY</div>
+<div>
+<div style="font-weight: 500;">Ahmet Yılmaz</div>
+<div style="font-size: 0.75rem; color: #6b7280;">2021405123 • Erkek</div>
+</div>
+</div>
+</td>
+<td>
+<div>Mühendislik</div>
+<div style="font-size: 0.875rem; color: #6b7280;">Bilgisayar Müh.</div>
+</td>
+<td>
+<div style="display: flex; align-items: center; gap: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6;">87.5</div>
+<div style="font-size: 0.75rem; color: #6b7280;">
+<div>Akademik: 35</div>
+<div>Gelir: 28</div>
+<div>Sosyal: 24.5</div>
+</div>
+</div>
+</td>
+<td>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span class="badge badge-info" style="font-size: 0.7rem;">YKS: 92%</span>
+<span class="badge badge-warning" style="font-size: 0.7rem;">Gelir: Düşük</span>
+</div>
+</td>
+<td><span class="badge badge-warning">Bekliyor</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>
+<input class="row-checkbox" style="width: 16px; height: 16px;" type="checkbox"/>
+</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Yusuf Eren</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">yusuf.eren@metu.edu.tr</span></div></td>
+<td>
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500;">AK</div>
+<div>
+<div style="font-weight: 500;">Ayşe Kaya</div>
+<div style="font-size: 0.75rem; color: #6b7280;">2022406789 • Kız</div>
+</div>
+</div>
+</td>
+<td>
+<div>Fen-Edebiyat</div>
+<div style="font-size: 0.875rem; color: #6b7280;">Matematik</div>
+</td>
+<td>
+<div style="display: flex; align-items: center; gap: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #10b981;">92.3</div>
+<div style="font-size: 0.75rem; color: #6b7280;">
+<div>Akademik: 38</div>
+<div>Gelir: 30</div>
+<div>Sosyal: 24.3</div>
+</div>
+</div>
+</td>
+<td>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span class="badge badge-success" style="font-size: 0.7rem;">CGPA: 3.8</span>
+<span class="badge badge-warning" style="font-size: 0.7rem;">Gelir: Düşük</span>
+</div>
+</td>
+<td><span class="badge badge-success">Onaylandı</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>
+<input class="row-checkbox" style="width: 16px; height: 16px;" type="checkbox"/>
+</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Hülya Karaca</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">hulya.karaca@metu.edu.tr</span></div></td>
+<td>
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500;">MK</div>
+<div>
+<div style="font-weight: 500;">Mehmet Kara</div>
+<div style="font-size: 0.75rem; color: #6b7280;">2023407890 • Erkek</div>
+</div>
+</div>
+</td>
+<td>
+<div>İktisadi ve İdari</div>
+<div style="font-size: 0.875rem; color: #6b7280;">İşletme</div>
+</td>
+<td>
+<div style="display: flex; align-items: center; gap: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #f59e0b;">78.4</div>
+<div style="font-size: 0.75rem; color: #6b7280;">
+<div>Akademik: 30</div>
+<div>Gelir: 25</div>
+<div>Sosyal: 23.4</div>
+</div>
+</div>
+</td>
+<td>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span class="badge badge-danger" style="font-size: 0.7rem;">Şehit Yakını</span>
+<span class="badge badge-info" style="font-size: 0.7rem;">Engelli</span>
+</div>
+</td>
+<td><span class="badge badge-warning">Bekliyor</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>
+<input class="row-checkbox" style="width: 16px; height: 16px;" type="checkbox"/>
+</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Baran Güneş</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">baran.gunes@metu.edu.tr</span></div></td>
+<td>
+<div style="display: flex; align-items: center; gap: 12px;">
+<div style="width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500;">ZA</div>
+<div>
+<div style="font-weight: 500;">Zeynep Arslan</div>
+<div style="font-size: 0.75rem; color: #6b7280;">2020403456 • Kız</div>
+</div>
+</div>
+</td>
+<td>
+<div>Mimarlık</div>
+<div style="font-size: 0.875rem; color: #6b7280;">Mimarlık</div>
+</td>
+<td>
+<div style="display: flex; align-items: center; gap: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #ef4444;">65.2</div>
+<div style="font-size: 0.75rem; color: #6b7280;">
+<div>Akademik: 28</div>
+<div>Gelir: 20</div>
+<div>Sosyal: 17.2</div>
+</div>
+</div>
+</td>
+<td>
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span class="badge badge-danger" style="font-size: 0.7rem;">CGPA: 2.2</span>
+</div>
+</td>
+<td><span class="badge badge-danger">Reddedildi</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div style="display: flex; justify-content: between; align-items: center; padding: 20px; border-top: 1px solid #e5e7eb;">
+<div style="font-size: 0.875rem; color: #6b7280;">
+                            324 başvurudan 1-20 arası gösteriliyor
+                        </div>
+<div style="margin-left: auto; display: flex; gap: 8px;">
+<button class="button button-secondary button-sm" disabled="">Önceki</button>
+<button class="button button-sm" style="background: #3b82f6; color: white;">1</button>
+<button class="button button-sm">2</button>
+<button class="button button-sm">3</button>
+<button class="button button-sm">...</button>
+<button class="button button-sm">17</button>
+<button class="button button-secondary button-sm">Sonraki</button>
+</div>
+</div>
+</div>
+<!-- Score Distribution Chart -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-top: 24px;">
+<div class="chart-container">
+<div class="chart-header">
+<h3 class="chart-title">Puan Dağılımı</h3>
+</div>
+<div style="padding: 20px; height: 300px;">
+<!-- Score distribution histogram -->
+<div style="display: flex; align-items: flex-end; justify-content: space-around; height: 100%; padding: 0 20px;">
+<div style="width: 15%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<span style="font-size: 0.75rem; font-weight: 600;">12</span>
+<div style="width: 100%; background: #ef4444; height: 20%; border-radius: 4px 4px 0 0;"></div>
+<span style="font-size: 0.75rem; color: #6b7280;">0-59</span>
+</div>
+<div style="width: 15%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<span style="font-size: 0.75rem; font-weight: 600;">45</span>
+<div style="width: 100%; background: #f59e0b; height: 35%; border-radius: 4px 4px 0 0;"></div>
+<span style="font-size: 0.75rem; color: #6b7280;">60-69</span>
+</div>
+<div style="width: 15%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<span style="font-size: 0.75rem; font-weight: 600;">78</span>
+<div style="width: 100%; background: #3b82f6; height: 60%; border-radius: 4px 4px 0 0;"></div>
+<span style="font-size: 0.75rem; color: #6b7280;">70-79</span>
+</div>
+<div style="width: 15%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<span style="font-size: 0.75rem; font-weight: 600;">112</span>
+<div style="width: 100%; background: #10b981; height: 85%; border-radius: 4px 4px 0 0;"></div>
+<span style="font-size: 0.75rem; color: #6b7280;">80-89</span>
+</div>
+<div style="width: 15%; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+<span style="font-size: 0.75rem; font-weight: 600;">77</span>
+<div style="width: 100%; background: #10b981; height: 58%; border-radius: 4px 4px 0 0;"></div>
+<span style="font-size: 0.75rem; color: #6b7280;">90-100</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Stats -->
+<div class="chart-container">
+<div class="chart-header">
+<h3 class="chart-title">Hızlı İstatistikler</h3>
+</div>
+<div style="padding: 20px;">
+<div style="display: flex; flex-direction: column; gap: 20px;">
+<div>
+<div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 8px;">Fakülte Dağılımı</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+<span style="font-size: 0.875rem;">Mühendislik</span>
+<span style="font-size: 0.875rem; font-weight: 600;">35%</span>
+</div>
+<div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">
+<div style="background: #3b82f6; height: 100%; width: 35%;"></div>
+</div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+<span style="font-size: 0.875rem;">Fen-Edebiyat</span>
+<span style="font-size: 0.875rem; font-weight: 600;">28%</span>
+</div>
+<div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">
+<div style="background: #8b5cf6; height: 100%; width: 28%;"></div>
+</div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+<span style="font-size: 0.875rem;">İktisadi İdari</span>
+<span style="font-size: 0.875rem; font-weight: 600;">22%</span>
+</div>
+<div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">
+<div style="background: #10b981; height: 100%; width: 22%;"></div>
+</div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+<span style="font-size: 0.875rem;">Diğer</span>
+<span style="font-size: 0.875rem; font-weight: 600;">15%</span>
+</div>
+<div style="background: #e5e7eb; height: 6px; border-radius: 3px; overflow: hidden;">
+<div style="background: #f59e0b; height: 100%; width: 15%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 8px;">Öncelik Grupları</div>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+<div style="text-align: center; padding: 12px; background: #fee2e2; border-radius: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #ef4444;">18</div>
+<div style="font-size: 0.75rem; color: #991b1b;">Şehit/Gazi</div>
+</div>
+<div style="text-align: center; padding: 12px; background: #dbeafe; border-radius: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6;">24</div>
+<div style="font-size: 0.75rem; color: #1e3a8a;">Engelli</div>
+</div>
+<div style="text-align: center; padding: 12px; background: #fef3c7; border-radius: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #f59e0b;">156</div>
+<div style="font-size: 0.75rem; color: #92400e;">Düşük Gelir</div>
+</div>
+<div style="text-align: center; padding: 12px; background: #d1fae5; border-radius: 8px;">
+<div style="font-size: 1.25rem; font-weight: 700; color: #10b981;">89</div>
+<div style="font-size: 0.75rem; color: #065f46;">Yüksek Başarı</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="content" id="students-section"><div><h1 class="page-title">Öğrenci Yönetimi</h1><p class="page-subtitle">Yurda kayıtlı öğrencilerin listesi ve işlemleri</p></div>
+<div class="report-filters" style="margin-bottom: 24px;">
+<div class="filter-row">
+<div class="form-group">
+<label class="form-label">Fakülte</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Mühendislik</option>
+<option>İİBF</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Cinsiyet</label>
+<select class="form-select">
+<option>Tümü</option>
+<option>Erkek</option>
+<option>Kız</option>
+</select>
+</div>
+<div class="form-group" style="flex: 1;">
+<label class="form-label">Arama</label>
+<input class="form-input" placeholder="İsim, numara veya TC..." type="text"/>
+</div>
+<button class="button button-primary">Filtrele</button>
+</div>
+</div>
+<div class="table-container">
+<table class="data-table">
+<thead>
+<tr>
+<th>Öğrenci No</th>
+<th>Ad Soyad</th>
+<th>Bölüm</th>
+<th>Oda</th>
+<th>Durum</th>
+<th>İşlem</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2021405123</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Selin Taş</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">selin.tas@metu.edu.tr</span></div></td>
+<td>Bilgisayar Müh.</td>
+<td>A101</td>
+<td><span class="badge badge-success">Aktif</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+<tr>
+<td>2022406789</td>
+<td><div style="line-height: 1.3;"><span onclick="showStudentDetail()" style="font-weight:600; color:#1d4ed8; cursor:pointer; display:block;">Kerem Uçar</span><span style="font-size: 0.85rem; color:#6b7280; display:block;">kerem.ucar@metu.edu.tr</span></div></td>
+<td>Matematik</td>
+<td>B203</td>
+<td><span class="badge badge-warning">İzinli</span></td>
+<td><button class="btn btn-sm btn-outline-secondary" type="button">İşlemler</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></main>
+</div>
+<!-- Modals -->
+<!-- Building Modal -->
+<div class="modal" id="buildingModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 class="modal-title">Yeni Bina Ekle</h2>
+<button class="modal-close" onclick="closeModal('buildingModal')">×</button>
+</div>
+<form>
+<div class="modal-body">
+<div class="form-grid">
+<div class="form-group">
+<label class="form-label">Bina Adı</label>
+<input class="form-input" placeholder="Örn: Erkek Yurdu C" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Bina Tipi</label>
+<select class="form-select" required="">
+<option value="">Seçiniz</option>
+<option value="male">Erkek Yurdu</option>
+<option value="female">Kız Yurdu</option>
+<option value="mixed">Karma Yurt</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Kat Sayısı</label>
+<input class="form-input" max="10" min="1" required="" type="number"/>
+</div>
+<div class="form-group">
+<label class="form-label">Kat Başı Oda Sayısı</label>
+<input class="form-input" min="1" required="" type="number"/>
+</div>
+<div class="form-group">
+<label class="form-label">Oda Kapasitesi</label>
+<select class="form-select" required="">
+<option value="">Seçiniz</option>
+<option value="1">1 Kişilik</option>
+<option value="2">2 Kişilik</option>
+<option value="3">3 Kişilik</option>
+<option value="4">4 Kişilik</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Durum</label>
+<select class="form-select" required="">
+<option value="active">Aktif</option>
+<option value="maintenance">Bakımda</option>
+<option value="inactive">Pasif</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Özellikler</label>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px;">
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="features" type="checkbox" value="laundry"/>
+<span>Çamaşırhane</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="features" type="checkbox" value="kitchen"/>
+<span>Mutfak</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="features" type="checkbox" value="study"/>
+<span>Çalışma Odası</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="features" type="checkbox" value="lounge"/>
+<span>Dinlenme Salonu</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="features" type="checkbox" value="wifi"/>
+<span>Wi-Fi</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="features" type="checkbox" value="elevator"/>
+<span>Asansör</span>
+</label>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Adres</label>
+<textarea class="form-textarea" placeholder="Bina adresi" rows="3"></textarea>
+</div>
+</div>
+<div class="modal-footer">
+<button class="button button-secondary" onclick="closeModal('buildingModal')" type="button">İptal</button>
+<button class="button button-primary" type="submit">Binayı Ekle</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Room Modal -->
+<div class="modal" id="roomModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 class="modal-title">Yeni Oda Ekle</h2>
+<button class="modal-close" onclick="closeModal('roomModal')">×</button>
+</div>
+<form>
+<div class="modal-body">
+<div class="form-grid">
+<div class="form-group">
+<label class="form-label">Oda Numarası</label>
+<input class="form-input" placeholder="Örn: 205" required="" type="text"/>
+</div>
+<div class="form-group">
+<label class="form-label">Kapasite</label>
+<select class="form-select" required="">
+<option value="">Seçiniz</option>
+<option value="1">1 Kişilik</option>
+<option value="2">2 Kişilik</option>
+<option value="3">3 Kişilik</option>
+<option value="4">4 Kişilik</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Oda Tipi</label>
+<select class="form-select" required="">
+<option value="standard">Standart</option>
+<option value="suite">Suit</option>
+<option value="handicapped">Engelli Odası</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Aylık Ücret (₺)</label>
+<input class="form-input" min="0" required="" step="50" type="number"/>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Oda Özellikleri</label>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 8px;">
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="roomFeatures" type="checkbox" value="balcony"/>
+<span>Balkon</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="roomFeatures" type="checkbox" value="bathroom"/>
+<span>Özel Banyo</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="roomFeatures" type="checkbox" value="fridge"/>
+<span>Mini Buzdolabı</span>
+</label>
+<label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+<input name="roomFeatures" type="checkbox" value="ac"/>
+<span>Klima</span>
+</label>
+</div>
+</div>
+<div class="form-group">
+<label class="form-label">Durum</label>
+<select class="form-select" required="">
+<option value="available">Müsait</option>
+<option value="occupied">Dolu</option>
+<option value="maintenance">Bakımda</option>
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Notlar</label>
+<textarea class="form-textarea" placeholder="Oda ile ilgili notlar (opsiyonel)" rows="3"></textarea>
+</div>
+</div>
+<div class="modal-footer">
+<button class="button button-secondary" onclick="closeModal('roomModal')" type="button">İptal</button>
+<button class="button button-primary" type="submit">Odayı Ekle</button>
+</div>
+</form>
+</div>
+</div>
+<script>
+        // Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Show Section
+        function showSection(sectionName) {
+            // Hide all content sections (only direct children of main-content with ID ending in -section)
+            const mainContent = document.querySelector('.main-content');
+            const sections = mainContent.querySelectorAll('[id$="-section"]');
+            
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(sectionName + '-section');
+            if (selectedSection) {
+                selectedSection.style.display = 'block';
+            }
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate the clicked nav item
+            const clickedItem = event.currentTarget || document.querySelector(`.nav-item[onclick*="${sectionName}"]`);
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Action Menu Toggle
+        function toggleActionMenu(button) {
+            const dropdown = button.nextElementSibling;
+            const allDropdowns = document.querySelectorAll('.action-dropdown');
+            
+            allDropdowns.forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('show');
+                }
+            });
+            
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.action-menu')) {
+                document.querySelectorAll('.action-dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        });
+
+        // Building Management
+        function showBuildingDetails(buildingName) {
+            document.getElementById('buildingTitle').textContent = buildingName + ' - Kat Planı';
+            document.getElementById('floorPlanSection').style.display = 'block';
+            document.querySelector('.building-grid').style.display = 'none';
+        }
+
+        function hideFloorPlan() {
+            document.getElementById('floorPlanSection').style.display = 'none';
+            document.querySelector('.building-grid').style.display = 'grid';
+        }
+
+        function showRoomDetails(roomNumber) {
+            alert(`Oda ${roomNumber} detayları gösteriliyor...`);
+        }
+
+        // Floor tabs
+        document.querySelectorAll('.floor-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.floor-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // Here you would load the rooms for the selected floor
+            });
+        });
+
+        // Chart options
+        document.querySelectorAll('.chart-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.closest('.chart-options');
+                parent.querySelectorAll('.chart-option').forEach(o => o.classList.remove('active'));
+                this.classList.add('active');
+                // Here you would update the chart based on selection
+            });
+        });
+
+        // Tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const parent = this.closest('.tabs');
+                parent.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                // Here you would show the relevant tab content
+            });
+        });
+
+        // Form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Form gönderildi!');
+                // Close modal if in modal
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Responsive
+        function checkScreenSize() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            if (window.innerWidth <= 768) {
+                mobileMenuBtn.style.display = 'flex';
+            } else {
+                mobileMenuBtn.style.display = 'none';
+            }
+        }
+
+        window.addEventListener('resize', checkScreenSize);
+        checkScreenSize();
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        };
+    </script>
+<script>
+function showStudentDetail() {
+    console.log("Opening modal...");
+    var modal = document.getElementById('studentDetailModal');
+    if (modal) {
+        modal.style.display = 'block';
+    } else {
+        console.error("Modal not found!");
+    }
+}
+function closeModal(id) {
+    var modal = document.getElementById(id);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>
+<div class="modal" id="studentDetailModal">
+<div class="modal-content" style="max-width: 600px; margin: 10% auto; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); padding: 30px; position: relative;">
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 12px;">
+<h2 style="margin: 0; font-size: 1.5rem;">👨‍🎓 Öğrenci Detayı</h2>
+<span onclick="closeModal('studentDetailModal')" style="cursor:pointer; font-size: 1.5rem;">×</span>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px;">
+<div style="flex: 1 1 45%;">
+<p><strong>Ad Soyad:</strong> Ahmet Yılmaz</p>
+<p><strong>Öğrenci No:</strong> 2021405123</p>
+<p><strong>Fakülte:</strong> Mühendislik</p>
+<p><strong>Bölüm:</strong> Bilgisayar Müh.</p>
+</div>
+<div style="flex: 1 1 45%;">
+<p><strong>Oda:</strong> A101</p>
+<p><strong>Cinsiyet:</strong> Erkek</p>
+<p><strong>Durum:</strong> <span style="background:#d1e7dd; color:#0f5132; padding:4px 8px; border-radius:6px;">Aktif</span></p>
+<p><strong>Giriş Tarihi:</strong> 15.09.2023</p>
+</div>
+</div>
+<div style="text-align: right; margin-top: 24px;">
+<button onclick="closeModal('studentDetailModal')" style="background:#f0f0f0; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer;">Kapat</button>
+</div>
+</div>
+</div>
+</body>
+</html>
