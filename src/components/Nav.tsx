@@ -10,8 +10,17 @@ export default function Nav() {
         <li class={`border-b-2 ${active("/")} mx-1.5 sm:mx-6`}>
           <a href="/">Home</a>
         </li>
-        <li class={`border-b-2 ${active("/about")} mx-1.5 sm:mx-6`}>
-          <a href="/about">About</a>
+        <li class={`border-b-2 ${active("/cards")} mx-1.5 sm:mx-6`}>
+          <a href="/cards">Cards</a>
+        </li>
+        <li class={`border-b-2 ${active("/comboboxes")} mx-1.5 sm:mx-6`}>
+          <a href="/comboboxes">Comboboxes</a>
+        </li>
+        <li class={`border-b-2 ${active("/inputs")} mx-1.5 sm:mx-6`}>
+          <a href="/inputs">Inputs</a>
+        </li>
+        <li class={`border-b-2 ${active("/buttons")} mx-1.5 sm:mx-6`}>
+          <a href="/buttons">Buttons</a>
         </li>
       </ul>
     </nav>
