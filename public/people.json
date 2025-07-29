@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Wade Cooper",
+    "username": "wadecooper",
+    "isStudent": true,
+    "picture": "https://randomuser.me/api/portraits/men/11.jpg"
+  },
+  {
+    "name": "Arlene Mccoy",
+    "username": "arlenemccoy",
+    "isStudent": false,
+    "picture": null
+  },
+  {
+    "name": "Devon Webb",
+    "username": "devonwebb",
+    "isStudent": true,
+    "picture": "https://randomuser.me/api/portraits/men/24.jpg"
+  },
+  {
+    "name": "Tom Cook",
+    "username": "tomcook",
+    "isStudent": false,
+    "picture": null
+  },
+  {
+    "name": "Tanya Fox",
+    "username": "tanyafox",
+    "isStudent": true,
+    "picture": "https://randomuser.me/api/portraits/women/32.jpg"
+  },
+  {
+    "name": "Hellen Schmidt",
+    "username": "hellenschmidt",
+    "isStudent": false,
+    "picture": null
+  },
+  {
+    "name": "Caroline Scott",
+    "username": "carolinescott",
+    "isStudent": true,
+    "picture": "https://randomuser.me/api/portraits/women/57.jpg"
+  }
+]
