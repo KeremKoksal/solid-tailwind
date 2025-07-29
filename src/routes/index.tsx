@@ -8,10 +8,10 @@ import { A } from "@solidjs/router";
 
 import Counter from "~/components/Counter";
 import BadgeExample from "~/components/Badge";
-import Textareas from "~/components/Textareas";
-import Heading from "~/components/headings";
+import TextAreas from "~/components/TextAreas";
+import Heading from "~/components/Headings";
 import Modal from "~/components/Modal";
-import Pagination from "~/components/pagination";
+import Pagination from "~/components/Pagination";
 import Avatar from "~/components/Avatar";
 import SelectMenus from "~/components/SelectMenus";
 
@@ -35,6 +35,7 @@ export default function Home() {
     const [people, setPeople] = createSignal<any[]>([]);
 
 
+    const currentUser = () => people()[0];
     // API users resource
     const [users] = createResource(fetchUsers);
 
@@ -52,19 +53,12 @@ export default function Home() {
         setPeople(data);
     });
 
-    const currentUser = () => people()[0];    
-    const [users] = createResource(fetchUsers);
-    const [filterGender, setFilterGender] = createSignal("");
-    const [sortField, setSortField] = createSignal<"name" | "age">("name");
-    const [isModalOpen, setModalOpen] = createSignal(false);
-    const [modalMode, setModalMode] = createSignal<"create" | "update">("create");
-    const [currentPage, setCurrentPage] = createSignal(1);
-    const resultsPerPage = 9;
+
 
     const filteredSorted = createMemo(() => {
         let list = users() || [];
         if (filterGender() !== "") {
-            list = list.filter((u) => u.gender === filterGender());
+            list = list.filter((u: { gender: string; }) => u.gender === filterGender());
         }
         list = [...list].sort((a, b) => {
             if (sortField() === "name") {
@@ -240,63 +234,21 @@ export default function Home() {
             <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
 
             <div class="px-4 py-6 flex justify-center max-w-2xl mx-auto">
-                <Textareas
+                <TextAreas
                     id="ariza-takip-metin-alani"
                     title="Arıza Takip Notları"
                     placeholder="Arızanın detaylarını..."
                     rows={6}
                     initialValue="Müşteri şikayeti: "
                     required
-                    onTextChange={(v) => console.log("Metin:", v)}
+                    onTextChange={(v: string) => console.log("Metin:", v)}
                     pillAction={{
                         label: "Kaydı Tamamla",
-                        onClick: (v) => alert("Gönderildi: " + v),
+                        onClick: (v: string) => alert("Gönderildi: " + v),
                         disabled: false
                     }}
                 />
             </div>
-
-            <Heading title="Kullanıcılar" description="Filtrele, sırala veya kullanıcı ekle">
-               
-                <select
-                    value={filterGender()}
-                    onInput={(e) => setFilterGender(e.currentTarget.value)}
-                    class="border rounded px-2 py-1 text-sm"
-                >
-                    <option value="">Filtrele</option>
-                    <option value="male">Erkek</option>
-                    <option value="female">Kadın</option>
-                </select>
-
-                <select
-                    value={sortField()}
-                    onInput={(e) => setSortField(e.currentTarget.value as "name" | "age")}
-                    class="border rounded px-2 py-1 text-sm"
-                >
-                    <option value="name">İsme Göre</option>
-                    <option value="age">Yaşa Göre</option>
-                </select>
-
-                <button
-                    class="bg-white border px-3 py-1 rounded hover:bg-gray-50"
-                    onClick={() => {
-                        setModalMode("update");
-                        setModalOpen(true);
-                    }}
-                >
-                    Güncelle
-                </button>
-
-                <button
-                    class="bg-sky-600 text-white px-3 py-1 rounded hover:bg-sky-700"
-                    onClick={() => {
-                        setModalMode("create");
-                        setModalOpen(true);
-                    }}
-                >
-                    Yeni Kullanıcı
-                </button>
-            </Heading>
 
             <Show when={users()} fallback={<p>Yükleniyor...</p>}>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -385,17 +337,17 @@ export default function Home() {
             <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
 
             <div class="px-4 py-6 flex justify-center max-w-2xl mx-auto">
-                <Textareas
+                <TextAreas
                     id="ariza-takip-metin-alani"
                     title="Arıza Takip Notları"
                     placeholder="Arızanın detaylarını..."
                     rows={6}
                     initialValue="Müşteri şikayeti: "
                     required
-                    onTextChange={(v) => console.log("Metin:", v)}
+                    onTextChange={(v: string) => console.log("Metin:", v)}
                     pillAction={{
                         label: "Kaydı Tamamla",
-                        onClick: (v) => alert("Gönderildi: " + v),
+                        onClick: (v: string) => alert("Gönderildi: " + v),
                         disabled: false
                     }}
                 />

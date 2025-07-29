@@ -3,7 +3,7 @@ import { FileRoutes } from "@solidjs/start/router";
 import { Suspense, createSignal, Show } from "solid-js";
 
 import Nav from "~/components/Nav";
-import Textareas from "~/components/Textareas/Textareas";
+import TextAreas from "~/components/TextAreas";
 import "./app.css";
 
 export default function App() {
@@ -32,7 +32,7 @@ export default function App() {
                     <Show when={showForm()}>
                         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                             <div class="bg-white rounded-xl w-full max-w-3xl relative">
-                                <Textareas onSubmit={handleSubmit} />
+                                <TextAreas onSubmit={handleSubmit} />
                                 <button
                                     onClick={() => setShowForm(false)}
                                     class="absolute top-4 right-4 text-gray-500 hover:text-gray-700"

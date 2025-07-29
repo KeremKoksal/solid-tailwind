@@ -1,6 +1,5 @@
-
-import { Component, createSignal, For, Show } from 'solid-js';
-import { FaSolidUser, FaSolidTag, FaSolidCalendar, FaSolidPaperclip } from 'solid-icons/fa';
+import {Component, createSignal, For, Show} from 'solid-js';
+import {FaSolidUser, FaSolidTag, FaSolidCalendar, FaSolidPaperclip} from 'solid-icons/fa';
 
 type ActionType = 'atama' | 'etiket' | 'son-tarih' | 'dosya';
 
@@ -12,7 +11,7 @@ interface Action {
     onSelect: (value: string) => void;
 }
 
-interface TextareasProps {
+interface TextAreasProps {
     onSubmit?: (data: {
         baslik: string;
         aciklama: string;
@@ -20,10 +19,11 @@ interface TextareasProps {
         etiket?: string;
         sonTarih?: string;
         dosya?: string
-    }) => void;
+    }) => void,
+    id?: string
 }
 
-const Textareas: Component<TextareasProps> = (props) => {
+const TextAreas: Component<TextAreasProps> = (props) => {
     const [baslik, setBaslik] = createSignal('');
     const [aciklama, setAciklama] = createSignal('');
     const [activeDropdown, setActiveDropdown] = createSignal<ActionType | null>(null);
@@ -40,13 +40,13 @@ const Textareas: Component<TextareasProps> = (props) => {
             type: 'atama',
             label: 'Atama Yap',
             options: [
-                { text: 'Bakım Ekibi', value: 'bakim' },
-                { text: 'Elektrikçi', value: 'elektrik' },
-                { text: 'Su Tesisatçısı', value: 'tesisat' },
-                { text: 'Temizlik Görevlisi', value: 'temizlik' },
-                { text: 'Yurt Müdürü', value: 'mudur' },
-                { text: 'Kantin Sorumlusu', value: 'kantin' },
-                { text: 'Güvenlik', value: 'guvenlik' }
+                {text: 'Bakım Ekibi', value: 'bakim'},
+                {text: 'Elektrikçi', value: 'elektrik'},
+                {text: 'Su Tesisatçısı', value: 'tesisat'},
+                {text: 'Temizlik Görevlisi', value: 'temizlik'},
+                {text: 'Yurt Müdürü', value: 'mudur'},
+                {text: 'Kantin Sorumlusu', value: 'kantin'},
+                {text: 'Güvenlik', value: 'guvenlik'}
             ],
             selected: atanan(),
             onSelect: (value) => {
@@ -58,13 +58,13 @@ const Textareas: Component<TextareasProps> = (props) => {
             type: 'etiket',
             label: 'Etiket Ekle',
             options: [
-                { text: 'Acil Onarım', value: 'acil' },
-                { text: 'Elektrik Arızası', value: 'elektrik' },
-                { text: 'Su Kaçağı', value: 'su' },
-                { text: 'Isınma Problemi', value: 'isinma' },
-                { text: 'Temizlik', value: 'temizlik' },
-                { text: 'Diğer', value: 'diger' },
-                { text: 'Kritik', value: 'kritik' }
+                {text: 'Acil Onarım', value: 'acil'},
+                {text: 'Elektrik Arızası', value: 'elektrik'},
+                {text: 'Su Kaçağı', value: 'su'},
+                {text: 'Isınma Problemi', value: 'isinma'},
+                {text: 'Temizlik', value: 'temizlik'},
+                {text: 'Diğer', value: 'diger'},
+                {text: 'Kritik', value: 'kritik'}
             ],
             selected: etiket(),
             onSelect: (value) => {
@@ -76,12 +76,12 @@ const Textareas: Component<TextareasProps> = (props) => {
             type: 'son-tarih',
             label: 'Son Tarih',
             options: [
-                { text: 'Bugün 18:00', value: 'bugun' },
-                { text: 'Yarın Sabah', value: 'yarin-sabah' },
-                { text: 'Yarın Akşam', value: 'yarin-aksam' },
-                { text: '3 Gün İçinde', value: '3-gun' },
-                { text: 'Bu Hafta', value: 'hafta' },
-                { text: 'Gelecek Hafta', value: 'gelecek-hafta' }
+                {text: 'Bugün 18:00', value: 'bugun'},
+                {text: 'Yarın Sabah', value: 'yarin-sabah'},
+                {text: 'Yarın Akşam', value: 'yarin-aksam'},
+                {text: '3 Gün İçinde', value: '3-gun'},
+                {text: 'Bu Hafta', value: 'hafta'},
+                {text: 'Gelecek Hafta', value: 'gelecek-hafta'}
             ],
             selected: sonTarih(),
             onSelect: (value) => {
@@ -92,7 +92,8 @@ const Textareas: Component<TextareasProps> = (props) => {
         {
             type: 'dosya',
             label: 'Dosya Ekle',
-            onSelect: () => {}
+            onSelect: () => {
+            }
         }
     ];
 
@@ -190,8 +191,9 @@ const Textareas: Component<TextareasProps> = (props) => {
                         {(action) => (
                             <div class="relative">
                                 {action.type === 'dosya' ? (
-                                    <label class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full text-sm cursor-pointer border border-gray-300 hover:bg-gray-100">
-                                        <FaSolidPaperclip class="text-gray-500" size={14} />
+                                    <label
+                                        class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full text-sm cursor-pointer border border-gray-300 hover:bg-gray-100">
+                                        <FaSolidPaperclip class="text-gray-500" size={14}/>
                                         {dosya() || action.label}
                                         <input
                                             type="file"
@@ -212,13 +214,13 @@ const Textareas: Component<TextareasProps> = (props) => {
                                             class="flex items-center gap-2 px-3 py-1.5 bg-white rounded-full text-sm border border-gray-300 hover:bg-gray-100"
                                         >
                                             {action.type === 'atama' && (
-                                                <FaSolidUser class="text-gray-500" size={14} />
+                                                <FaSolidUser class="text-gray-500" size={14}/>
                                             )}
                                             {action.type === 'etiket' && (
-                                                <FaSolidTag class="text-gray-500" size={14} />
+                                                <FaSolidTag class="text-gray-500" size={14}/>
                                             )}
                                             {action.type === 'son-tarih' && (
-                                                <FaSolidCalendar class="text-gray-500" size={14} />
+                                                <FaSolidCalendar class="text-gray-500" size={14}/>
                                             )}
                                             {action.selected
                                                 ? `${action.label}: ${action.options?.find(o => o.value === action.selected)?.text}`
@@ -261,7 +263,9 @@ const Textareas: Component<TextareasProps> = (props) => {
                 >
                     <span>Gönder</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd"
+                              d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                              clip-rule="evenodd"/>
                     </svg>
                 </button>
             </div>
@@ -271,11 +275,11 @@ const Textareas: Component<TextareasProps> = (props) => {
                 <div
                     class="fixed inset-0 z-40"
                     onClick={() => setActiveDropdown(null)}
-                    style={{ "background": "transparent" }}
+                    style={{"background": "transparent"}}
                 />
             </Show>
         </div>
     );
 };
 
-export default Textareas;
+export default TextAreas;
