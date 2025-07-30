@@ -28,6 +28,9 @@ export default function Nav() {
           <li className={`border-b-2 ${active("/users")} mx-1.5 sm:mx-6`}>
             <a href="/users">Data Grid</a>
           </li>
+          <li className={`border-b-2 ${active("/building")} mx-1.5 sm:mx-6`}>
+            <a href="/building">Buildings</a>
+          </li>
         </ul>
       </nav>
 
