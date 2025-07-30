@@ -1,9 +1,7 @@
 import { createResource, createSignal, createMemo, For, Show, onMount } from "solid-js";
 import RadioGroup from '~/components/RadioGroup';
 import Toggle from '~/components/Toggle';
-import RadioGroup_2 from '~/components/RadioGroup_2';
-import RadioGroup_3 from '~/components/RadioGroup_3';
-import RadioGroup_4 from '~/components/RadioGroup_4';
+import RadioGroupTable from '~/components/RadioGroupTable';
 import { A } from "@solidjs/router";
 
 import Counter from "~/components/Counter";
@@ -23,7 +21,7 @@ const fetchUsers = async () => {
 
 export default function Home() {
     const [inlineNotif, setInlineNotif] = createSignal(false);
-    const [inlineRoom, setInlineRoom] = createSignal(false);
+
 
     const handleSelectionChange = (value: string) => {
         console.log("Seçilen:", value);
@@ -87,7 +85,7 @@ export default function Home() {
                                  class="w-4 h-4 text-blue-600">
                                 <path stroke-linecap="round"
                                       stroke-linejoin="round"
-                                      d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                      d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
                             </svg>
                         ) : (
                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -96,12 +94,12 @@ export default function Home() {
                                  class="w-4 h-4 text-blue-600">
                                 <path stroke-linecap="round"
                                       stroke-linejoin="round"
-                                      d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
                             </svg>
                         )}
                     </button>
 
-                    <div>
+                    <div class="text-left flex flex-col">
                         <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Notifications</p>
                         <p class="text-sm text-gray-500 dark:text-gray-400">
                             How do you prefer to receive notifications?
@@ -118,79 +116,41 @@ export default function Home() {
 
             <section>
                 <div class="mb-4 flex items-center space-x-2">
-                    <button
-                        class="p-1 rounded-full border border-gray-400 hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-800"
-                        onClick={() => setInlineRoom(!inlineRoom())}
-                        aria-label="Görünüm Değiştir"
-                    >
-                        {inlineRoom() ? (
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 24 24"
-                                 stroke-width="1.5" stroke="currentColor"
-                                 class="w-4 h-4 text-purple-600">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                            </svg>
-                        ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 fill="none" viewBox="0 0 24 24"
-                                 stroke-width="1.5" stroke="currentColor"
-                                 class="w-4 h-4 text-blue-600">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        )}
-                    </button>
+
 
                     <div>
-                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">List with description</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Radio Table</p>
                     </div>
                 </div>
 
-                <RadioGroup_2
-                    inline={inlineRoom()}
+                <RadioGroupTable
+                    inline={true}
+                    hasDivider={true}
+                    buttonsRight={false}
+                    boxed={false}
                     initialValue="small"
-                    onChange={(val) => console.log("List with description seçimi:", val)}
+                    selectedHighlight={false}
                 />
+
             </section>
 
-            <section>
-                <div class="mb-4">
-                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Simple list with radio on the right</p>
-                </div>
-                <RadioGroup_3
-                    initialValue="none"
-                    onChange={(val) => console.log("Simple list with radio on the right seçimi:", val)}
-                />
-            </section>
 
             <section>
-                <div class="mb-4">
-                    <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Simple Table</p>
-                </div>
-                <RadioGroup_4
-                    initialValue="startup"
-                    onChange={(val) => console.log("Simple Table seçimi:", val)}
-                />
-            </section>
-
-            <section>
-                <h2 class="text-lg font-bold text-gray-900 dark:text-gray-100">Toggles</h2>
+                <h2 class="text-left flex flex-col text-lg font-bold text-gray-900 dark:text-gray-100">Toggles</h2>
                 <div class="space-y-4 mt-4">
-                    <Toggle />
-                    <Toggle icon="✕" />
-                    <Toggle label="Available to hire" labelPosition="right" icon="✕" />
-                    <Toggle label="Annual billing (Save 10%)" labelPosition="left" />
+                    <Toggle/>
+                    <Toggle icon="✕"/>
+                    <Toggle label="Available to hire" labelPosition="right" icon="✕"/>
+                    <Toggle label="Annual billing (Save 10%)" labelPosition="left"/>
                 </div>
             </section>
+
 
             <h1 class="max-w-6xl text-6xl text-sky-700 font-thin uppercase my-16">
                 Hello world!
             </h1>
 
-            <Counter />
+            <Counter/>
 
             <p class="mt-8">
                 Visit{" "}
@@ -211,13 +171,13 @@ export default function Home() {
                 </A>
             </p>
 
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
+            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto"/>
 
             <div class="px-4 py-6 flex justify-center">
-                <BadgeExample />
+                <BadgeExample/>
             </div>
 
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
+            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto"/>
 
             <div class="px-4 py-6 flex justify-center max-w-2xl mx-auto">
                 <TextAreas
@@ -336,7 +296,7 @@ export default function Home() {
                         required
                     />
                     <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" /> Aktif mi?
+                        <input type="checkbox"/> Aktif mi?
                     </label>
                     <button
                         type="submit"
@@ -354,7 +314,7 @@ export default function Home() {
                 />
             </Show>
 
-            <SelectMenus people={people()} />
+            <SelectMenus people={people()}/>
         </main>
     );
 }

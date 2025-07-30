@@ -1,5 +1,5 @@
 module.exports = {
-  darkMode: 'class', // veya 'media' değil, 'class' OLMALI
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {},

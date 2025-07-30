@@ -8,7 +8,7 @@ export default defineConfig({
   plugins: [solid()],
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, 'src'), // ✅ Bu alias çok önemli
+      '~': path.resolve(__dirname, 'src'), //
     },
   },
 });
