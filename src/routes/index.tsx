@@ -15,7 +15,6 @@ import Pagination from "~/components/Pagination";
 import Avatar from "~/components/Avatar";
 import SelectMenus from "~/components/SelectMenus";
 
-
 const fetchUsers = async () => {
     const res = await fetch("https://randomuser.me/api/?results=40");
     const data = await res.json();
@@ -23,7 +22,6 @@ const fetchUsers = async () => {
 };
 
 export default function Home() {
-    // Tüm state ve fonksiyon tanımlamalarını buraya, return'ün önüne taşıyın
     const [inlineNotif, setInlineNotif] = createSignal(false);
     const [inlineRoom, setInlineRoom] = createSignal(false);
 
@@ -31,15 +29,11 @@ export default function Home() {
         console.log("Seçilen:", value);
     };
 
-    // Local people state
     const [people, setPeople] = createSignal<any[]>([]);
 
-
     const currentUser = () => people()[0];
-    // API users resource
     const [users] = createResource(fetchUsers);
 
-    // Filter and sort states
     const [filterGender, setFilterGender] = createSignal("");
     const [sortField, setSortField] = createSignal<"name" | "age">("name");
     const [isModalOpen, setModalOpen] = createSignal(false);
@@ -52,8 +46,6 @@ export default function Home() {
         const data = await res.json();
         setPeople(data);
     });
-
-
 
     const filteredSorted = createMemo(() => {
         let list = users() || [];
@@ -74,16 +66,13 @@ export default function Home() {
         Math.ceil(filteredSorted().length / resultsPerPage)
     );
 
-
     const paginatedUsers = createMemo(() => {
         const start = (currentPage() - 1) * resultsPerPage;
         return filteredSorted().slice(start, start + resultsPerPage);
     });
 
-    // Tek bir return ifadesi kullanın ve tüm içeriği buraya yerleştirin
     return (
-        <main class="p-8 space-y-8 text-center mx-auto text-gray-700"> {/* Sınıfları birleştirdim */}
-            {/* RadioGroup ve Toggle Bölümleri */}
+        <main class="p-8 space-y-8 text-center mx-auto text-gray-700">
             <section>
                 <div class="mb-4 flex items-center space-x-2">
                     <button
@@ -197,9 +186,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Diğer Kısımlar (Hello world, Counter, Users, Modal vb.) */}
             <h1 class="max-w-6xl text-6xl text-sky-700 font-thin uppercase my-16">
-
                 Hello world!
             </h1>
 
@@ -213,7 +200,6 @@ export default function Home() {
                     class="text-sky-600 hover:underline"
                 >
                     solidjs.com
-
                 </a>{" "}
                 to learn how to build Solid apps.
             </p>
@@ -224,109 +210,6 @@ export default function Home() {
                     About Page
                 </A>
             </p>
-
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
-
-            <div class="px-4 py-6 flex justify-center">
-                <BadgeExample />
-            </div>
-
-            <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
-
-            <div class="px-4 py-6 flex justify-center max-w-2xl mx-auto">
-                <TextAreas
-                    id="ariza-takip-metin-alani"
-                    title="Arıza Takip Notları"
-                    placeholder="Arızanın detaylarını..."
-                    rows={6}
-                    initialValue="Müşteri şikayeti: "
-                    required
-                    onTextChange={(v: string) => console.log("Metin:", v)}
-                    pillAction={{
-                        label: "Kaydı Tamamla",
-                        onClick: (v: string) => alert("Gönderildi: " + v),
-                        disabled: false
-                    }}
-                />
-            </div>
-
-            <Show when={users()} fallback={<p>Yükleniyor...</p>}>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <For each={paginatedUsers()}>
-                        {(user) => (
-                            <div class="border rounded-md p-4 text-left">
-                                <img
-                                    src={user.picture.large}
-                                    alt="avatar"
-                                    class="rounded-full w-24 h-24 mx-auto mb-2"
-                                />
-                                <p class="font-semibold">
-                                    {user.name.first} {user.name.last}
-                                </p>
-                                <p class="text-sm text-gray-500">
-                                    {user.gender}, Age: {user.dob.age}
-                                </p>
-                                <p class="text-sm">{user.email}</p>
-                            </div>
-                        )}
-                    </For>
-                </div>
-
-                <Pagination
-                    currentPage={currentPage()}
-                    totalPages={totalPages()}
-                    totalResults={filteredSorted().length}
-                    onPageChange={setCurrentPage}
-                    resultsPerPage={resultsPerPage}
-                />
-            </Show>
-
-            <Modal
-                open={isModalOpen()}
-                onClose={() => setModalOpen(false)}
-                title={
-                    modalMode() === "create" ? "Yeni Kullanıcı Ekle" : "Kullanıcı Güncelle"
-                }
-            >
-                <form
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        alert("Saved!");
-                        setModalOpen(false);
-                    }}
-                    class="flex flex-col gap-3"
-                >
-                    <input
-                        type="text"
-                        placeholder="First name"
-                        class="border px-3 py-2 rounded"
-                        required
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        class="border px-3 py-2 rounded"
-                        required
-                    />
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" /> Aktif mi?
-                    </label>
-                    <button
-                        type="submit"
-                        class="bg-sky-600 text-white px-4 py-2 rounded hover:bg-sky-700"
-                    >
-                        Kaydet
-                    </button>
-                </form>
-            </Modal>
-            <Show when={currentUser()}>
-                <Avatar
-                    isStudent={currentUser()?.isStudent}
-                    picture={currentUser()?.picture}
-                />
-            </Show>
-
-            <SelectMenus people={people()} />
 
             <hr class="my-12 border-gray-300 dark:border-gray-700 w-full max-w-2xl mx-auto" />
 
@@ -463,7 +346,15 @@ export default function Home() {
                     </button>
                 </form>
             </Modal>
+
+            <Show when={currentUser()}>
+                <Avatar
+                    isStudent={currentUser()?.isStudent}
+                    picture={currentUser()?.picture}
+                />
+            </Show>
+
+            <SelectMenus people={people()} />
         </main>
     );
 }
-

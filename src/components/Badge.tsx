@@ -27,7 +27,6 @@ export default function BadgeExample() {
         pink: 'bg-white text-pink-700 ring-pink-300 dark:bg-gray-900 dark:text-pink-400 dark:ring-pink-800'
     };
 
-    // Renk seçimi için silme
     const colorMap = {
         gray: 'bg-gray-200 dark:bg-gray-700',
         red: 'bg-red-200 dark:bg-red-700',

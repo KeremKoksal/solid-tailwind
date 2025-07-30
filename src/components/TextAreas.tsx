@@ -1,6 +1,5 @@
 import {Component, createSignal, For, Show} from 'solid-js';
 import {FaSolidUser, FaSolidTag, FaSolidCalendar, FaSolidPaperclip} from 'solid-icons/fa';
-
 type ActionType = 'atama' | 'etiket' | 'son-tarih' | 'dosya';
 
 interface Action {
@@ -12,15 +11,26 @@ interface Action {
 }
 
 interface TextAreasProps {
+    id?: string;
+    title?: string;
+    placeholder?: string;
+    rows?: number;
+    initialValue?: string;
+    required?: boolean;
+    onTextChange?: (value: string) => void;
+    pillAction?: {
+        label: string;
+        onClick: (value: string) => void;
+        disabled: boolean;
+    };
     onSubmit?: (data: {
         baslik: string;
         aciklama: string;
         atanan?: string;
         etiket?: string;
         sonTarih?: string;
-        dosya?: string
-    }) => void,
-    id?: string
+        dosya?: string;
+    }) => void;
 }
 
 const TextAreas: Component<TextAreasProps> = (props) => {
@@ -33,7 +43,6 @@ const TextAreas: Component<TextAreasProps> = (props) => {
     const [sonTarih, setSonTarih] = createSignal<string | undefined>();
     const [hata, setHata] = createSignal('');
     const [basariMesaji, setBasariMesaji] = createSignal('');
-
 
     const getActions = (): Action[] => [
         {
@@ -120,17 +129,13 @@ const TextAreas: Component<TextAreasProps> = (props) => {
             dosya: dosya() || undefined
         };
 
-
         if (props.onSubmit && typeof props.onSubmit === 'function') {
             props.onSubmit(formData);
         } else {
             console.log('Form Data:', formData);
         }
 
-
         setBasariMesaji('Arıza raporu başarıyla gönderildi!');
-
-
         setBaslik('');
         setAciklama('');
         setAtanan(undefined);
@@ -138,20 +143,16 @@ const TextAreas: Component<TextAreasProps> = (props) => {
         setSonTarih(undefined);
         setDosya(null);
 
-
         setTimeout(() => {
             setBasariMesaji('');
         }, 3000);
     };
-
     const handleFileChange = (e: Event) => {
         const selectedFile = (e.target as HTMLInputElement).files?.[0];
         if (selectedFile) setDosya(selectedFile.name);
     };
-
     return (
         <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg border border-gray-200 overflow-visible relative">
-
             <div class="p-4 space-y-4">
                 <input
                     type="text"
@@ -160,7 +161,6 @@ const TextAreas: Component<TextAreasProps> = (props) => {
                     value={baslik()}
                     onInput={(e) => setBaslik(e.currentTarget.value)}
                 />
-
                 <textarea
                     rows={5}
                     class="w-full p-3 border-0 focus:ring-0 resize-none text-gray-700 placeholder-gray-400"
@@ -170,20 +170,16 @@ const TextAreas: Component<TextAreasProps> = (props) => {
                 />
             </div>
 
-
             <Show when={hata()}>
                 <div class="px-4 py-2 bg-red-100 text-red-700 text-sm">
                     {hata()}
                 </div>
             </Show>
-
-
             <Show when={basariMesaji()}>
                 <div class="px-4 py-2 bg-green-100 text-green-700 text-sm">
                     {basariMesaji()}
                 </div>
             </Show>
-
 
             <div class="flex flex-wrap justify-between items-center p-3 bg-gray-50 border-t gap-2 relative">
                 <div class="flex flex-wrap gap-2">
@@ -227,7 +223,6 @@ const TextAreas: Component<TextAreasProps> = (props) => {
                                                 : action.label
                                             }
                                         </button>
-
                                         <Show when={activeDropdown() === action.type}>
                                             <div
                                                 class="absolute z-50 top-full mt-1 left-0 bg-white shadow-lg rounded-lg p-2 w-48 border border-gray-200 max-h-60 overflow-y-auto"
@@ -255,7 +250,6 @@ const TextAreas: Component<TextAreasProps> = (props) => {
                         )}
                     </For>
                 </div>
-
                 <button
                     type="button"
                     onClick={handleSubmit}
@@ -270,7 +264,6 @@ const TextAreas: Component<TextAreasProps> = (props) => {
                 </button>
             </div>
 
-
             <Show when={activeDropdown()}>
                 <div
                     class="fixed inset-0 z-40"
@@ -281,5 +274,4 @@ const TextAreas: Component<TextAreasProps> = (props) => {
         </div>
     );
 };
-
 export default TextAreas;
