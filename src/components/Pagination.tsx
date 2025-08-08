@@ -94,8 +94,6 @@ const Pagination = (props: PaginationProps) => {
         }
     };
 
-    if (props.totalResults === 0 || props.totalPages <= 1) return null;
-
     return (
         <div class={props.containerClass || "flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 dark:border-gray-700 pt-4 mt-6"}>
             <div class="flex justify-between sm:hidden">

@@ -1,4 +1,5 @@
 import { For } from "solid-js";
+
 interface Building {
     id: number;
     name: string;
@@ -8,8 +9,10 @@ interface Building {
 
 interface BuildingTableProps {
     buildings: Building[];
+    selectedBuildingId?: number | null;
     onEdit: (building: Building) => void;
     onDelete: (buildingId: number) => void;
+    onRowClick?: (building: Building) => void;
 }
 
 export default function BuildingTable(props: BuildingTableProps) {
@@ -35,9 +38,24 @@ export default function BuildingTable(props: BuildingTableProps) {
                 <tbody>
                 <For each={props.buildings}>
                     {(building) => (
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <td class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {building.name}
+                        <tr
+                            class={`border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors duration-200 ${
+                                props.selectedBuildingId === building.id
+                                    ? 'bg-blue-50 dark:bg-blue-900 border-l-4 border-l-blue-500'
+                                    : 'bg-white dark:bg-gray-800'
+                            }`}
+                        >
+                            <td class={`py-4 px-6 font-medium whitespace-nowrap ${
+                                props.selectedBuildingId === building.id
+                                    ? 'text-blue-900 dark:text-blue-100'
+                                    : 'text-gray-900 dark:text-white'
+                            }`}>
+                                <span
+                                    class="cursor-pointer hover:underline text-blue-600 hover:text-blue-800 border border-blue-300 hover:border-blue-500 px-2 py-1 rounded transition-colors duration-200"
+                                    onClick={() => props.onRowClick?.(building)}
+                                >
+                                    {building.name}
+                                </span>
                             </td>
                             <td class="py-4 px-6">
                                 {building.gender === true
@@ -47,13 +65,14 @@ export default function BuildingTable(props: BuildingTableProps) {
                                         : "Karma"}
                             </td>
                             <td class="py-4 px-6">
-                                {building.private ? "Konukevi" : "Devlet"}
+                                {building.private ? "Konuk evi" : "Devlet"}
                             </td>
                             <td class="py-4 px-6">
                                 <a
                                     href="#"
                                     onClick={(e) => {
                                         e.preventDefault();
+                                        e.stopPropagation();
                                         props.onEdit(building);
                                     }}
                                     class="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-3"
@@ -64,6 +83,7 @@ export default function BuildingTable(props: BuildingTableProps) {
                                     href="#"
                                     onClick={(e) => {
                                         e.preventDefault();
+                                        e.stopPropagation();
                                         props.onDelete(building.id);
                                     }}
                                     class="font-medium text-red-600 dark:text-red-500 hover:underline"

@@ -37,6 +37,9 @@ export default function Nav() {
           <li className={`border-b-2 ${active("/buildingNazli")} mx-1.5 sm:mx-6`}>
             <a href="/buildingNazli">NazliBuilding</a>
           </li>
+          <li className={`border-b-2 ${active("/laundryNazli")} mx-1.5 sm:mx-6`}>
+            <a href="/laundryNazli">laundryNazli</a>
+          </li>
         </ul>
       </nav>
 
