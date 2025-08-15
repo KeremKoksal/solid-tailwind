@@ -12,6 +12,8 @@ import Modal from "~/components/Modal";
 import Pagination from "~/components/Pagination";
 import Avatar from "~/components/Avatar";
 import SelectMenus from "~/components/SelectMenus";
+import BuildingPage from "~/routes/building";
+
 
 const fetchUsers = async () => {
     const res = await fetch("https://randomuser.me/api/?results=40");
@@ -124,8 +126,8 @@ export default function Home() {
                 </div>
 
                 <RadioGroupTable
-                    inline={true}
-                    hasDivider={true}
+                    inline={false}
+                    hasDivider={false}
                     buttonsRight={false}
                     boxed={false}
                     initialValue="small"
@@ -315,6 +317,8 @@ export default function Home() {
             </Show>
 
             <SelectMenus people={people()}/>
+
+
         </main>
     );
 }

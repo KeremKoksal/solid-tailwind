@@ -20,7 +20,6 @@ export default function Toggle(props: ToggleProps) {
     setEnabled(newValue);
     props.onToggle?.(newValue);
   };
-
   return (
       <div class="flex items-center space-x-2">
         <Show when={hasLabel && isLabelLeft}>
@@ -71,5 +70,4 @@ export default function Toggle(props: ToggleProps) {
       </div>
   );
 }
-
 
