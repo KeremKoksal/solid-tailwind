@@ -1,4 +1,5 @@
-import { createSignal, Show, For, onMount, createMemo } from 'solid-js';
+import { createSignal, Show, For, onMount, createMemo, createEffect } from 'solid-js';
+
 import Heading from '~/components/Headings';
 import Combobox from '~/components/Combobox';
 import Pagination from '~/components/Pagination';
@@ -119,6 +120,15 @@ export default function BuildingIsilPage() {
     onMount(() => {
         loadBuildings();
     });
+
+
+    createEffect(() => {
+        const currentId = selectedBuildingId();
+        if (currentId !== null && !buildingList().some(b => b.id === currentId)) {
+            setSelectedBuildingId(null);
+        }
+    });
+
     async function handleDelete(id: number) {
         const ok = confirm("Bu yurdu silmek istediğine emin misin?");
         if (!ok) return;
@@ -126,14 +136,19 @@ export default function BuildingIsilPage() {
             await fetchRpc("delete_building", { id });
             setBuildingList(prev => prev.filter(b => b.id !== id));
             setError("");
+
+            if (selectedBuildingId() === id) {
+                setSelectedBuildingId(null);
+            }
         } catch (e: any) {
             setError("Silme hatası: " + e.message);
         }
     }
 
 
+
     return (
-        <main class="p-4 sm:p-6 lg:p-8 bg-gray-100 min-h-screen space-y-4 sm:space-y-6">
+        <main class="p-4 sm:p-6 lg:p-8 bg-gray-100 dark:bg-gray-900 min-h-screen space-y-4 sm:space-y-6">
             <Heading
                 title="Yurt Yönetimi"
                 description="Yurtları listeleyebilir, filtreleyebilir, güncelleyebilir ve odalarını görebilirsiniz."
@@ -143,9 +158,9 @@ export default function BuildingIsilPage() {
                         name="gender"
                         placeholder="Cinsiyet seçiniz"
                         options={[
-                            { value: '', label: 'Tümü' },
-                            { value: 'true', label: 'Erkek' },
-                            { value: 'false', label: 'Kız' },
+                            {value: '', label: 'Tümü'},
+                            {value: 'true', label: 'Erkek'},
+                            {value: 'false', label: 'Kız'},
                         ]}
                         value={genderFilter()}
                         onChange={(val) => {
@@ -186,8 +201,9 @@ export default function BuildingIsilPage() {
 
             <div class="flex flex-col xl:flex-row gap-4 sm:gap-6">
                 <div class={selectedBuildingId() !== null
-                    ? "w-full xl:w-1/2 bg-white rounded-xl shadow-sm border border-gray-200 h-fit"
-                    : "w-full bg-white rounded-xl shadow-sm border border-gray-200 h-fit"}>
+                    ? "w-full xl:w-1/2 bg-white shadow-sm border border-gray-200 h-fit"
+                    : "w-full bg-white shadow-sm border border-gray-200 h-fit"}>
+
 
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                         <h2 class="text-xl font-bold text-purple-900">
@@ -329,9 +345,12 @@ export default function BuildingIsilPage() {
                     </Show>
                     <Show when={filteredList().length === 0}>
                         <div class="text-center py-12">
-                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            <div
+                                class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                     viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                                 </svg>
                             </div>
                             <h3 class="text-lg font-medium text-gray-900 mb-2">Yurt bulunamadı</h3>
@@ -363,107 +382,117 @@ export default function BuildingIsilPage() {
                         setShowEditModal(false);
                         setEditingBuilding(null);
                     }}
-                    title={editingBuilding()?.id === -1 ? 'Yeni Yurt Ekle' : 'Yurdu Güncelle'}
+                    title=""
                 >
-                    <form
-                        class="space-y-4"
-                        onSubmit={async (e) => {
-                            e.preventDefault();
-                            const b = editingBuilding()!;
-                            try {
-                                if (b.id === -1) {
-                                    await fetchRpc("create_building", {
-                                        data: {
-                                            name: b.name,
-                                            gender: b.gender,
-                                            private: b.private,
-                                            manager_id: 1000
-                                        }
-                                    });
-                                } else {
-                                    await fetchRpc("update_building", {
-                                        id: b.id,
-                                        data: {name: b.name, gender: b.gender, private: b.private},
-                                    });
-                                }
-                                await loadBuildings();
-                                setShowEditModal(false);
-                                setEditingBuilding(null);
-                            } catch (err: any) {
-                                setError((b.id === -1 ? "Ekleme" : "Güncelleme") + " hatası: " + err.message);
-                            }
-                        }}
-                    >
-                        <div class="space-y-1">
-                            <label class="text-sm font-medium text-gray-700">Yurt Adı</label>
-                            <input
-                                type="text"
-                                class="w-full rounded-xl border border-indigo-200 bg-white px-3 py-2 shadow-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
-                                value={editingBuilding()!.name}
-                                onInput={(e) =>
-                                    setEditingBuilding(prev => prev ? {...prev, name: e.currentTarget.value} : prev)
-                                }
-                                placeholder="Örn: 1. Yurt"
-                                required
-                            />
-                        </div>
 
-                        <div class="space-y-1">
-                            <label class="text-sm font-medium text-gray-700">Cinsiyet</label>
-                            <select
-                                class="w-full rounded-xl border border-indigo-200 bg-white px-3 py-2 shadow-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200"
-                                value={isMale(editingBuilding()!.gender) ? "true" : "false"}
-                                onChange={(e) =>
-                                    setEditingBuilding(prev => prev ? {
-                                        ...prev,
-                                        gender: e.currentTarget.value === "true"
-                                    } : prev)
-                                }
-                                required
-                            >
-                                <option value="true">Erkek</option>
-                                <option value="false">Kız</option>
-                            </select>
-                        </div>
+                    <div class="bg-white text-gray-900">
+                        <h3 class="text-xl font-semibold mb-3">
+                            {editingBuilding()!.id === -1 ? 'Yeni Yurt Ekle' : 'Yurdu Güncelle'}
+                        </h3>
 
-                        <div
-                            class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-3">
-                            <label class="text-sm text-gray-700" for="privateChk">Özel mi?</label>
-                            <input
-                                id="privateChk"
-                                type="checkbox"
-                                class="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
-                                checked={!!editingBuilding()!.private}
-                                onChange={(e) =>
-                                    setEditingBuilding(prev => prev ? {
-                                        ...prev,
-                                        private: e.currentTarget.checked
-                                    } : prev)
-                                }
-                            />
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row justify-end gap-2">
-                            <button
-                                type="button"
-                                class="w-full sm:w-auto px-4 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 order-2 sm:order-1"
-                                onClick={() => {
+                        <form
+                            class="space-y-4"
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                const b = editingBuilding()!;
+                                try {
+                                    if (b.id === -1) {
+                                        await fetchRpc("create_building", {
+                                            data: {
+                                                name: b.name,
+                                                gender: b.gender,
+                                                private: b.private,
+                                                manager_id: 1000
+                                            }
+                                        });
+                                    } else {
+                                        await fetchRpc("update_building", {
+                                            id: b.id,
+                                            data: {name: b.name, gender: b.gender, private: b.private},
+                                        });
+                                    }
+                                    await loadBuildings();
                                     setShowEditModal(false);
                                     setEditingBuilding(null);
-                                }}
-                            >
-                                İptal
-                            </button>
-                            <button
-                                type="submit"
-                                class="w-full sm:w-auto px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow order-1 sm:order-2"
-                            >
-                                {editingBuilding()?.id === -1 ? 'Ekle' : 'Güncelle'}
-                            </button>
-                        </div>
-                    </form>
+                                } catch (err: any) {
+                                    setError((b.id === -1 ? "Ekleme" : "Güncelleme") + " hatası: " + err.message);
+                                }
+                            }}
+                        >
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-700">Yurt Adı</label>
+                                <input
+                                    type="text"
+                                    class="w-full rounded-xl border border-indigo-200 bg-white px-3 py-2 shadow-sm outline-none
+                   focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder:text-gray-400"
+                                    value={editingBuilding()!.name}
+                                    onInput={(e) =>
+                                        setEditingBuilding(prev => prev ? {...prev, name: e.currentTarget.value} : prev)
+                                    }
+                                    placeholder="Örn: 1. Yurt"
+                                    required
+                                />
+                            </div>
+
+                            <div class="space-y-1">
+                                <label class="text-sm font-medium text-gray-700">Cinsiyet</label>
+                                <select
+                                    class="w-full rounded-xl border border-indigo-200 bg-white px-3 py-2 shadow-sm outline-none
+                   focus:border-indigo-400 focus:ring-2 focus:ring-indigo-200 text-gray-900"
+                                    value={isMale(editingBuilding()!.gender) ? "true" : "false"}
+                                    onChange={(e) =>
+                                        setEditingBuilding(prev => prev ? {
+                                            ...prev,
+                                            gender: e.currentTarget.value === "true"
+                                        } : prev)
+                                    }
+                                    required
+                                >
+                                    <option value="true">Erkek</option>
+                                    <option value="false">Kız</option>
+                                </select>
+                            </div>
+
+                            <div
+                                class="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-3">
+                                <label class="text-sm text-gray-700" for="privateChk">Özel mi?</label>
+                                <input
+                                    id="privateChk"
+                                    type="checkbox"
+                                    class="h-5 w-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                                    checked={!!editingBuilding()!.private}
+                                    onChange={(e) =>
+                                        setEditingBuilding(prev => prev ? {
+                                            ...prev,
+                                            private: e.currentTarget.checked
+                                        } : prev)
+                                    }
+                                />
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row justify-end gap-2">
+                                <button
+                                    type="button"
+                                    class="w-full sm:w-auto px-4 py-2 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 order-2 sm:order-1"
+                                    onClick={() => {
+                                        setShowEditModal(false);
+                                        setEditingBuilding(null);
+                                    }}
+                                >
+                                    İptal
+                                </button>
+                                <button
+                                    type="submit"
+                                    class="w-full sm:w-auto px-5 py-2 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 shadow order-1 sm:order-2"
+                                >
+                                    {editingBuilding()!.id === -1 ? 'Ekle' : 'Güncelle'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </Modal>
             </Show>
+
         </main>
     );
 }

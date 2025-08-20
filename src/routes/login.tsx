@@ -6,7 +6,8 @@ export default function Login() {
     };
 
     return (
-        <div class="min-h-screen flex items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+        <div
+            class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4 sm:px-6 lg:px-8">
             <div class="w-full max-w-sm sm:max-w-md space-y-8">
                 <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 sm:p-8">
                     <div class="text-center">
@@ -17,7 +18,7 @@ export default function Login() {
                             Hesabınıza giriş yapın
                         </p>
                     </div>
-                    <LoginForm onSuccess={handleSuccess} />
+                    <LoginForm onSuccess={handleSuccess}/>
                 </div>
             </div>
         </div>

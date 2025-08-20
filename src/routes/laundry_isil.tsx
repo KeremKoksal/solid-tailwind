@@ -36,7 +36,6 @@ async function fetchRpc(method: string, params?: any) {
             params,
         }),
     });
-
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
     return data.result;
@@ -149,8 +148,14 @@ export default function LaundryIsilPage() {
         loadCurrentUser();
     });
 
+    createEffect(() => {
+        selectedLaundryId();
+        setSelectedMachine(null);
+    });
+
+
     return (
-        <main class="p-4 md:p-8 bg-gray-100 min-h-screen space-y-6">
+        <main class="p-4 sm:p-6 lg:p-8 bg-gray-100 dark:bg-gray-900 min-h-screen space-y-4 sm:space-y-6">
             <Heading
                 title="Çamaşırhane Yönetimi"
                 description="Çamaşırhaneleri listeleyebilir, filtreleyebilir ve düzenleyebilirsiniz."
@@ -167,15 +172,20 @@ export default function LaundryIsilPage() {
                         onChange={(val) => {
                             setBuildingFilter(val);
                             setCurrentPage(1);
+                            setSelectedLaundryId(null);
+                            setSelectedMachine(null);
+
                         }}
                         class="w-full sm:w-48"
                     />
                     <button
                         class="bg-green-600 text-white px-3 py-2 rounded hover:bg-green-700 transition-colors w-full sm:w-auto"
-                        onClick={() => {
-                            loadLaundry();
+                        onClick={async () => {
+                            await loadLaundry();
+                            if (onlyMine()) await loadAllowedLaundries();
                             setCurrentPage(1);
                         }}
+
                     >
                         Yenile
                     </button>
@@ -183,9 +193,13 @@ export default function LaundryIsilPage() {
                         class="bg-purple-600 text-white px-3 py-2 rounded hover:bg-purple-700 transition-colors w-full sm:w-auto"
                         onClick={async () => {
                             if (!onlyMine()) await loadAllowedLaundries();
-                            setOnlyMine(!onlyMine());
+                            setOnlyMine(prev => !prev);
+                            setBuildingFilter('');
+                            setSelectedLaundryId(null);
+                            setSelectedMachine(null);
                             setCurrentPage(1);
                         }}
+
                     >
                         {onlyMine() ? 'Tüm Çamaşırhaneler' : 'Sadece Benimkiler'}
                     </button>
@@ -212,7 +226,7 @@ export default function LaundryIsilPage() {
 
                 <div class={selectedLaundryId() !== null ? "w-full lg:w-1/2" : "w-full"}>
 
-                    <div class="bg-white rounded-xl shadow-lg border border-gray-200">
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
 
                         <div class="bg-gradient-to-r from-gray-50 to-purple-100 px-6 py-3 border-b border-gray-200">
                             <h3 class="text-xl font-bold text-black">
@@ -332,7 +346,7 @@ export default function LaundryIsilPage() {
                 </Show>
             </div>
 
-            <Show when={selectedMachine() !== null}>
+            <Show when={selectedMachine() !== null && selectedLaundryId() !== null}>
                 <div class="w-full">
                     <LaundryReservation_isil
                         machineId={selectedMachine()!.id}
@@ -345,7 +359,6 @@ export default function LaundryIsilPage() {
                 </div>
             </Show>
 
-            {/* Modal */}
             <Show when={showModal() && editing()}>
                 <Modal
                     open={showModal()}
@@ -353,9 +366,14 @@ export default function LaundryIsilPage() {
                         setShowModal(false);
                         setEditing(null);
                     }}
-                    title={editing()?.id === -1 ? 'Yeni Çamaşırhane Ekle' : 'Çamaşırhane Güncelle'}
+                    title=""
                 >
-                    <form
+                    <div class="bg-white text-gray-900">
+                        <h3 class="text-xl font-semibold mb-3">
+                            {editing()!.id === -1 ? 'Yeni Çamaşırhane Ekle' : 'Çamaşırhane Güncelle'}
+                        </h3>
+                    </div>
+                        <form
                         onSubmit={async (e) => {
                             e.preventDefault();
                             const form = e.currentTarget as HTMLFormElement;
@@ -381,14 +399,17 @@ export default function LaundryIsilPage() {
                                 });
                             }
                         }}
-                        class="flex flex-col gap-3"
+                        class="flex flex-col gap-3 text-gray-900"
                     >
                         <input
                             type="text"
                             name="name"
                             placeholder="Çamaşırhane Adı"
                             required
-                            class="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            class="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400
+       px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400
+       dark:border-gray-300 dark:bg-white dark:text-gray-900 dark:placeholder:text-gray-400 dark:focus:ring-blue-400 dark:focus:border-blue-400"
+
                             value={editing()?.name || ''}
                             onInput={(e) => updateEditingField('name', e.currentTarget.value)}
                         />
@@ -397,7 +418,11 @@ export default function LaundryIsilPage() {
                             name="building_id"
                             placeholder="Yurt ID"
                             required
-                            class="border px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            class="border border-gray-300 bg-white text-gray-900 placeholder:text-gray-400
+       px-3 py-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400
+       dark:border-gray-300 dark:bg-white dark:text-gray-900 dark:placeholder:text-gray-400 dark:focus:ring-blue-400 dark:focus:border-blue-400"
+
+
                             value={String(editing()?.building_id || '')}
                             onInput={(e) => updateEditingField('building_id', Number(e.currentTarget.value))}
                         />

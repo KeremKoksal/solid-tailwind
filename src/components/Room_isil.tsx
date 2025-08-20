@@ -7,7 +7,7 @@ interface Room {
     capacity: number;
     available: boolean;
     building_id: number;
-    price?: number;
+    price: number | null;
     wc?: boolean;
     ac?: boolean;
 }

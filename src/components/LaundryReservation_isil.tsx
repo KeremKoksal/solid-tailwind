@@ -398,7 +398,9 @@ export default function LaundryReservation_isil(props: Props) {
 
     return (
         <Show when={showSlots()}>
-            <div class="w-full bg-gradient-to-br from-gray-50 via-white to-slate-50 rounded-2xl shadow-md border border-gray-200 backdrop-blur-sm">
+            <div
+                class="w-full bg-gradient-to-br from-gray-50 via-white to-slate-50 rounded-2xl shadow-md border border-gray-200 overflow-hidden backdrop-blur-sm">
+
                 <div class="bg-gradient-to-r from-white-50 to-green-100 px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -428,11 +430,12 @@ export default function LaundryReservation_isil(props: Props) {
                     <div
                         class="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 px-6 py-4 rounded-xl shadow-sm">
                         <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                            <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
                                 <span class="text-amber-600 text-lg">⚡</span>
                             </div>
                             <p class="text-amber-800 font-medium">
-                                Her öğrenci aynı gün içinde en fazla <span class="font-bold">1</span> ve bir hafta içinde toplamda
+                                Her öğrenci aynı gün içinde en fazla <span class="font-bold">1</span> ve bir hafta
+                                içinde toplamda
                                 <span class="font-bold"> 7</span> rezervasyon yapabilir.
                             </p>
                         </div>
@@ -484,7 +487,8 @@ export default function LaundryReservation_isil(props: Props) {
 
                         <div
                             class="bg-gradient-to-r from-orange-100 to-amber-100 border-2 border-orange-200 rounded-xl px-6 py-4 text-center shadow-sm">
-                            <div class="text-xs font-semibold text-orange-700 uppercase tracking-wide">Kalan Hakkınız
+                            <div class="text-xs font-semibold text-orange-700 uppercase tracking-wide">Kalan
+                                Hakkınız
                             </div>
                             <div class="text-2xl font-bold text-orange-800 mt-1">{remainingQuota()} / 7</div>
                         </div>
@@ -524,7 +528,8 @@ export default function LaundryReservation_isil(props: Props) {
                     </div>
 
                     <Show when={message()}>
-                        <div class="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 text-gray-600 px-6 py-4 rounded-xl shadow-sm font-medium">
+                        <div
+                            class="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 text-gray-600 px-6 py-4 rounded-xl shadow-sm font-medium">
                             {message()}
                         </div>
                     </Show>
@@ -533,7 +538,8 @@ export default function LaundryReservation_isil(props: Props) {
                     <Show
                         when={slotFilter() === 'empty'}
                         fallback={
-                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+                            <div
+                                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
                                 <For
                                     each={slots().filter((slot) => {
                                         const isPast =
@@ -711,7 +717,8 @@ export default function LaundryReservation_isil(props: Props) {
                             })
                         }
                     >
-                        <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-6 shadow-lg">
+                        <div
+                            class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-xl p-6 shadow-lg">
                             <h4 class="text-lg font-bold text-amber-800 mb-4 flex items-center gap-2">
 
                                 Planlanan Rezervasyonlar
@@ -743,9 +750,11 @@ export default function LaundryReservation_isil(props: Props) {
                                         });
 
                                         return (
-                                            <div class="relative bg-white border-2 border-amber-200 rounded-xl p-4 shadow-md transition-all duration-200 hover:shadow-lg">
+                                            <div
+                                                class="relative bg-white border-2 border-amber-200 rounded-xl p-4 shadow-md transition-all duration-200 hover:shadow-lg">
                                                 <Show when={index() === 0}>
-                                                    <div class="absolute -top-3 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
+                                                    <div
+                                                        class="absolute -top-3 left-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-lg">
                                                         Yaklaşan Rezervasyon
                                                     </div>
                                                 </Show>

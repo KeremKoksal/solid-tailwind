@@ -37,14 +37,14 @@ export default function LoginForm(props: Props) {
     return (
         <div class="space-y-4 sm:space-y-6">
             <input
-                class="w-full border border-gray-300 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                class="w-full border border-gray-300 dark:border-gray-600 dark:bg-white dark:text-gray-600 dark:placeholder-gray-400 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 placeholder="Kullanıcı Adı"
                 value={username()}
                 onInput={(e) => setUsername(e.currentTarget.value)}
             />
             <input
                 type="password"
-                class="w-full border border-gray-300 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                class="w-full border border-gray-300 dark:border-gray-600 dark:bg-white dark:text-gray-600 dark:placeholder-gray-400 px-3 py-2 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 placeholder="Şifre"
                 value={pwd()}
                 onInput={(e) => setPwd(e.currentTarget.value)}
